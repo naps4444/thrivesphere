@@ -2,20 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
+    font-size: 0.75rem; 
+  }
+  
+  @media (min-width: 768px) { 
+    body {
+      font-size: 0.875rem; 
+    }
+  }
+  
+  @media (min-width: 1024px) { 
+    body {
+      font-size: 1rem; 
+    }
+  }
+
+  @media (min-width: 1440px) { 
+    body {
+      font-size: 1.25rem; 
+    }
+  }
+
+  @media (min-width: 2560px) { 
+    body {
+      font-size: 1.75rem; 
+    }
+  }
+
+
+  h1 {
+    font-size: 1.5rem; /* 24px */
+  }
+  
+  h2 {
+    font-size: 1.125rem; /* 18px */
+  }
+  
+  @media (min-width: 768px) { 
+    h1 {
+      font-size: 1.575rem; /* 30px */
+    }
+    h2 {
+      font-size: 1.3125rem; /* 21px */
+    }
+  }
+  
+  @media (min-width: 1024px) { 
+    h1 {
+      font-size: 1.975rem; /* 36px */
+    }
+    h2 {
+      font-size: 1.5rem; /* 24px */
+    }
+  }
+  
+  @media (min-width: 1440px) { 
+    h1 {
+      font-size: 2.625rem; /* 42px */
+    }
+    h2 {
+      font-size: 1.875rem; /* 30px */
+    }
+  }
+  
+  @media (min-width: 2560px) { 
+    h1 {
+      font-size: 3.375rem; /* 54px */
+    }
+    h2 {
+      font-size: 2.625rem; /* 42px */
+    }
+  }
+  
+
+  html {
+    scroll-behavior: smooth;
+  }
+  
