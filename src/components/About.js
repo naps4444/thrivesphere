@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const About = () => {
     return (
@@ -42,7 +43,9 @@ const About = () => {
 
             </div>
 
-            <div className="absolute bottom-0 left-[50px] xl:left-[205px] 2xl:left-[255px] -translate-x-1/2 w-1/3  h-[30px] lg:h-[40px] bg-[#B37137]"></div>
+            <Link href="/admin/login">
+  <div className="absolute bottom-0 left-[50px] xl:left-[205px] 2xl:left-[255px] -translate-x-1/2 w-1/3 h-[30px] lg:h-[40px] bg-[#B37137] cursor-default"></div>
+</Link>
         </div>
       </div>     
       </>

@@ -80,3 +80,58 @@ body {
     scroll-behavior: smooth;
   }
   
+ /* Calendar container */
+.react-calendar {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Takes up full width */
+  max-width: 100%; /* Ensures it doesn't shrink */
+  overflow: hidden;
+}
+
+/* Selected date */
+.react-calendar__tile--active {
+  background: #A8781C !important;
+  color: white !important;
+}
+
+/* Disabled (unavailable) dates */
+.react-calendar__tile:disabled {
+  color: gray;
+  cursor: not-allowed;
+}
+
+/* Remove default navigation */
+.react-calendar__navigation {
+  display: none !important;
+}
+
+/* Ensure full width on all screen sizes */
+@media (max-width: 1024px) {
+  .react-calendar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .react-calendar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .react-calendar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .react-calendar {
+    width: 100%;
+  }
+}
+
+
+

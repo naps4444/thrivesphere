@@ -40,7 +40,7 @@ const OurServices = () => {
               </p>
               <button
                 onClick={() => handleBooking("lets-connect")}
-                className="w-3/5 mx-auto md:w-[140px] lg:w-[160px] xl:w-[200px] 2xl:w-[250px] xl:py-4 md:mx-0 py-2 bg-[#A8781C] text-white font-cinzel"
+                className="w-3/5 mx-auto md:w-[140px] lg:w-[160px] xl:w-[200px] 2xl:w-[250px] xl:py-4 md:mx-0 py-2 bg-[#A8781C] text-white font-cinzel transition duration-300 ease-in-out transform hover:scale-105 hover:bg-[#8b5e15]"
               >
                 BOOK NOW
               </button>
@@ -58,7 +58,7 @@ const OurServices = () => {
                 </p>
                 <button
                   onClick={() => handleBooking("deep-dive")}
-                  className="w-3/5 mx-auto md:w-[140px] lg:w-[160px] xl:w-[200px] 2xl:w-[250px] xl:py-4 md:mx-0 py-2 bg-[#A8781C] text-white font-cinzel"
+                  className="w-3/5 mx-auto md:w-[140px] lg:w-[160px] xl:w-[200px] 2xl:w-[250px] xl:py-4 md:mx-0 py-2 bg-[#A8781C] text-white font-cinzel transition duration-300 ease-in-out transform hover:scale-105 hover:bg-[#8b5e15]"
                 >
                   BOOK NOW
                 </button>
@@ -80,7 +80,7 @@ const OurServices = () => {
               </p>
               <button
                 onClick={() => handleBooking("momentum-package")}
-                className="w-3/5 mx-auto md:w-[140px] lg:w-[160px] xl:w-[200px] 2xl:w-[250px] xl:py-4 md:mx-0 py-2 bg-[#A8781C] text-white font-cinzel"
+                className="w-3/5 mx-auto md:w-[140px] lg:w-[160px] xl:w-[200px] 2xl:w-[250px] xl:py-4 md:mx-0 py-2 bg-[#A8781C] text-white font-cinzel transition duration-300 ease-in-out transform hover:scale-105 hover:bg-[#8b5e15]"
               >
                 BOOK NOW
               </button>
