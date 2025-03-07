@@ -57,7 +57,7 @@ const Services = () => {
                                 <h1 className="text-center md:text-[18px] lg:text-[20px] xl:text-[25px] mt-5 md:font-semibold font-cinzel">
                                     {service.title}
                                 </h1>
-                                <div className="flex items-center min-h-[155px] md:min-h-[165px] lg:min-h-[165px] xl:min-h-[160px] 2xl:min-h-[240px]">
+                                <div className="flex items-center min-h-[125px] md:min-h-[145px] lg:min-h-[155px] xl:min-h-[160px] 2xl:min-h-[240px]">
 
                                 <p className="text-center w-[250px] md:w-[210px] lg:w-[290px] xl:w-[370px] 2xl:w-[450px] mx-auto font-rakkas tracking-wide md:tracking-normal  my-auto">
                                     {service.description}
