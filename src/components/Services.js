@@ -40,13 +40,13 @@ const Services = () => {
                         {
                             title: "PERSONAL GROWTH",
                             description: "Transform into the best version of yourself. Break free from self-doubt, embrace confidence, and develop a growth mindset that fuels success, happiness, and fulfillment in all aspects of life. You deserve More.",
-                            image: "imgg2.svg",
+                            image: "imgg22.svg",
                             alt: "woman practicing yoga"
                         },
                         {
                             title: "EMOTIONAL WELL-BEING",
                             description: "Find balance, inner peace, and emotional strength. Learn to manage stress, overcome fears, and cultivate resilience with expert support. Prioritize your mental and emotional health to live a more fulfilling, joyful life.",
-                            image: "imgg3.svg",
+                            image: "imgg33.svg",
                             alt: "peaceful woman with a flower"
                         }
                     ].map((service, index) => (

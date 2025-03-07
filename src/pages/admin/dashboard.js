@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 export default function AdminPage() {
   const [availableDates, setAvailableDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchAvailability() {
@@ -26,7 +28,7 @@ export default function AdminPage() {
       return;
     }
 
-    const formattedDate = new Date(selectedDate).toISOString().split("T")[0]; // "YYYY-MM-DD" format
+    const formattedDate = new Date(selectedDate).toISOString().split("T")[0];
 
     if (availableDates.includes(formattedDate)) {
       setMessage("This date is already added.");
@@ -34,8 +36,8 @@ export default function AdminPage() {
     }
 
     setAvailableDates((prev) => [...prev, formattedDate]);
-    setSelectedDate(""); // Reset input
-    setMessage(""); // Clear error message
+    setSelectedDate("");
+    setMessage("");
   };
 
   const removeDate = async (dateToRemove) => {
@@ -65,6 +67,8 @@ export default function AdminPage() {
     <div className="container md:w-8/12 xl:w-6/12 mx-auto flex flex-col justify-center px-6 py-12">
       <h1 className="text-3xl font-bold text-center text-[#154E59]">Admin Dashboard</h1>
 
+      
+
       <div className="mt-6 flex flex-col md:flex-row gap-4">
         <input
           type="date"
@@ -84,39 +88,46 @@ export default function AdminPage() {
       {message && <p className="mt-2 text-sm text-red-500">{message}</p>}
 
       <ul className="mt-4 border p-4 rounded shadow">
-  {availableDates.length > 0 ? (
-    availableDates.map((date, index) => {
-      const formattedDate = new Date(date).toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
+        {availableDates.length > 0 ? (
+          availableDates.map((date, index) => {
+            const formattedDate = new Date(date).toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            });
 
-      return (
-        <li key={index} className="flex justify-between items-center py-1 text-gray-700">
-          <span>
-            {date} ({formattedDate})
-          </span>
-          <button className="ml-4 text-red-500" onClick={() => removeDate(date)}>
-            ❌ Remove
-          </button>
-        </li>
-      );
-    })
-  ) : (
-    <p className="text-gray-500">No dates added yet.</p>
-  )}
-</ul>
-
+            return (
+              <li key={index} className="flex justify-between items-center py-1 text-gray-700">
+                <span>
+                  {date} ({formattedDate})
+                </span>
+                <button className="ml-4 text-red-500" onClick={() => removeDate(date)}>
+                  ❌ Remove
+                </button>
+              </li>
+            );
+          })
+        ) : (
+          <p className="text-gray-500">No dates added yet.</p>
+        )}
+      </ul>
 
       <button
-        className="bg-[#8b5e15] text-white px-6 py-2 mt-4 rounded disabled:opacity-50"
-        onClick={saveAvailability}
-        disabled={loading || availableDates.length === 0}
-      >
-        {loading ? "Saving..." : "Save Availability"}
-      </button>
+  className="bg-[#8b5e15] text-white px-6 py-2 mt-4 rounded disabled:opacity-50 transition-all duration-300 ease-in-out hover:bg-[#A0701C] hover:scale-105"
+  onClick={saveAvailability}
+  disabled={loading || availableDates.length === 0}
+>
+  {loading ? "Saving..." : "Save Availability"}
+</button>
+
+
+      <button 
+  onClick={() => router.push("/subscribers")} 
+  className="mt-10 bg-[#154E59] text-white px-6 py-2 rounded transition-all duration-300 ease-in-out hover:bg-[#1E6A75] hover:scale-105 w-8/12 mx-auto">
+  View Subscribers
+</button>
+
     </div>
   );
 }

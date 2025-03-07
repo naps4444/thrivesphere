@@ -39,7 +39,7 @@ const About = () => {
                 <Image src="/about3.svg" alt="lady medicated" width={100} height={100} className="h-[220px] lg:h-[250px]" />
                 </div>
 
-                <Image src="/about4.svg" alt="lady doing yoga" width={100} height={100} className="w-[150px] lg:w-[250px] mt-2 lg:mt-3 ml-[60px] lg:ml-[60px] xl:w-[220px] xl:ml-[50px] 2xl:w-[290px]" />
+                <Image src="/about44.svg" alt="stones" width={100} height={100} className="w-[150px] lg:w-[250px] mt-2 lg:mt-3 ml-[60px] lg:ml-[60px] xl:w-[220px] xl:ml-[50px] 2xl:w-[290px]" />
 
             </div>
 

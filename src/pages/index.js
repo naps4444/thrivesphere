@@ -1,5 +1,6 @@
 import About from "@/components/About";
 import Hero from "@/components/Hero";
+import NewsLetter from "@/components/NewsLetter";
 import Numbers from "@/components/Numbers";
 import Section1 from "@/components/Section1";
 import Section2 from "@/components/Section2";
@@ -21,6 +22,7 @@ export default function Home() {
         <About />
       </div>
       <Numbers />
+      <NewsLetter/>
       <div id="contact">
        
       </div>
