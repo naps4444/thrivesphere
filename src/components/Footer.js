@@ -7,12 +7,12 @@ const Footer = () => {
         <div className="flex flex-col gap-5">
             <div>
                 <h1 className="font-semibold font-georgia">Book a Consultation</h1>
-                <p className="mt-2 font-rakkas tracking-wide md:tracking-normal">123 Anywhere St, Any City, ST 12345</p>
+                {/* <p className="mt-2 font-rakkas tracking-wide md:tracking-normal">123 Anywhere St, Any City, ST 12345</p> */}
             </div>
 
             <div className="font-rakkas">
-                <p className="tracking-wide md:tracking-normal">Call +123-456-7890</p>
-                <p className="mt-1 tracking-widest md:tracking-normal">Email: hello@relwell.com</p>
+                <p className="tracking-wide md:tracking-normal">Call +1 (782) 440-5220</p>
+                <p className="mt-1 tracking-widest md:tracking-normal">Email: info@thrivespherecoaching.com</p>
             </div>
         </div>
 

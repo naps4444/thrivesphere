@@ -39,7 +39,7 @@ const Hero = () => {
           </div>
           <div className="bg-[#CCD0DC] flex items-center">
             <Image
-              src="/heroimg.svg"
+              src="/heroimg2.svg"
               alt="ceo thrivesphere"
               height={100}
               width={100}
