@@ -14,7 +14,7 @@ export default {
       fontFamily: {
         georgia: ["Georgia", "serif"],
         cinzel: ["Cinzel", "serif"],
-        rakkas: ["Rakkas", "cursive"],
+        rakkas: ["Volkhov", "serif"],
         volkhov: ["Volkhov", "serif"],
         rage: ["Rage Italic", "cursive"],
         lusitana: ["Lusitana", "serif"],
