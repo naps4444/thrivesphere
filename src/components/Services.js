@@ -34,7 +34,7 @@ const Services = () => {
                         {
                             title: "CAREER DEVELOPMENT",
                             description: "Unlock your true potential and build a fulfilling career with expert guidance. Gain clarity, confidence, and strategies to navigate challenges, seize opportunities, and achieve long-term professional success. Your future starts now.",
-                            image: "imgg1.svg",
+                            image: "carr1.svg",
                             alt: "man in suit"
                         },
                         {

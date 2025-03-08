@@ -105,11 +105,9 @@ const QuestionnaireCarousel = ({ answers, setAnswers }) => {
                 onChange={() => handleAnswer(currentQuestion.id, option)}
                 className="hidden"
               />
-              <span
-                className={`py-2 px-4 border rounded-md w-full text-center ${
-                  answers[currentQuestion.id] === option ? "bg-[#A8781C] text-white" : "bg-gray-100"
-                }`}
-              >
+              <span className={`py-2 px-4 border rounded-md w-full text-center ${
+                answers[currentQuestion.id] === option ? "bg-[#A8781C] text-white" : "bg-gray-100"
+              }`}>
                 {option}
               </span>
             </label>
@@ -124,11 +122,9 @@ const QuestionnaireCarousel = ({ answers, setAnswers }) => {
                 onChange={() => handleCheckboxChange(currentQuestion.id, option)}
                 className="hidden"
               />
-              <span
-                className={`py-2 px-4 border rounded-md w-full text-center ${
-                  (answers[currentQuestion.id] || []).includes(option) ? "bg-[#A8781C] text-white" : "bg-gray-100"
-                }`}
-              >
+              <span className={`py-2 px-4 border rounded-md w-full text-center ${
+                (answers[currentQuestion.id] || []).includes(option) ? "bg-[#A8781C] text-white" : "bg-gray-100"
+              }`}>
                 {option}
               </span>
             </label>
@@ -164,66 +160,55 @@ const QuestionnaireCarousel = ({ answers, setAnswers }) => {
   );
 };
 
-const BookingForm = () => {
+const BookingForm = ({ selectedDate, selectedTime }) => {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [answers, setAnswers] = useState({});
+  const [showQuestionnaire, setShowQuestionnaire] = useState(null);
 
   return (
     <div className="max-w-lg mx-auto space-y-6 font-rakkas">
-      {/* Questionnaire */}
-      <QuestionnaireCarousel answers={answers} setAnswers={setAnswers} />
-
-      {/* Booking Form */}
-      <div className="bg-white p-4 rounded-lg shadow-md w-full">
-        <form
-          action="https://formspree.io/f/mrbenyav"
-          method="POST"
-          className="mt-4 space-y-4"
-        >
-          {/* Email Input */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 lg:text-lg">Email</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="border p-2 w-full rounded-md"
-              required
-            />
+      {showQuestionnaire === null && (
+        <div className="bg-white p-4 rounded-lg shadow-md text-center">
+          <h2 className="text-lg font-bold">
+            Would you like to answer a few questions before booking?
+          </h2>
+          <div className="flex justify-center gap-4 mt-4">
+            <button onClick={() => setShowQuestionnaire(true)} className="bg-[#A8781C] text-white px-4 py-2 rounded-md">
+              Yes
+            </button>
+            <button onClick={() => setShowQuestionnaire(false)} className="bg-gray-500 text-white px-4 py-2 rounded-md">
+              No
+            </button>
           </div>
+        </div>
+      )}
 
-          {/* Phone Number Input */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 lg:text-lg">Phone Number</label>
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Enter your phone number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="border p-2 w-full rounded-md"
-              required
-            />
-          </div>
+      {showQuestionnaire && <QuestionnaireCarousel answers={answers} setAnswers={setAnswers} />}
 
-          {/* Hidden Fields for Questionnaire Answers */}
-          {Object.entries(answers).map(([key, value]) => (
-            <input key={key} type="hidden" name={key} value={Array.isArray(value) ? value.join(", ") : value} />
-          ))}
+      {showQuestionnaire !== null && (
+        <div className="bg-white p-4 rounded-lg shadow-md w-full">
+          <form action="https://formspree.io/f/mrbenyav" method="POST" className="space-y-4">
+          <input
+    type="hidden"
+    name="questionnaire_answers"
+    value={JSON.stringify(answers, null, 2)} // Formatting JSON with indentation
+  />
+            <input type="hidden" name="selected_date" value={selectedDate.toISOString().split("T")[0]} />
+            <input type="hidden" name="selected_time" value={selectedTime} />
 
-          {/* Submit Button */}
-          <button
-  type="submit"
-  className="bg-[#A8781C] text-white px-4 py-2 rounded w-full transition duration-300 hover:bg-[#8c6416] hover:scale-105"
->
-  Confirm Booking
-</button>
+            {/* User Details */}
+            <input type="text" name="full_name" placeholder="Full Name" required className="w-full p-2 border rounded-md" />
+            <input type="email" name="email" placeholder="Email" required className="w-full p-2 border rounded-md" />
+            <input type="tel" name="phone" placeholder="Phone Number" required className="w-full p-2 border rounded-md" />
 
-        </form>
-      </div>
+            <button type="submit" className="bg-[#A8781C] text-white px-4 py-2 rounded w-full">
+              Confirm Booking
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 };

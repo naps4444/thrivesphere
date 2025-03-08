@@ -29,7 +29,7 @@ const OurServices = () => {
 
         <div>
           <div className="grid md:grid-cols-2 justify-between mt-5 py-4 md:py-10 lg:py-14 px-6">
-            <Image src="/sev1.svg" alt="smiling woman on white" height={100} width={100} className="mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 border-black border-[1px] p-[1px]" />
+            <Image src="/sev11.svg" alt="smiling woman on white" height={100} width={100} className="mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 border-black border-[1px] p-[1px]" />
 
             <div className="flex flex-col my-auto gap-4 text-[#154E59] md:p-10 py-6 lg:p-16 xl:p-24">
               <h1 className="text-[20px] lg:text-[26px] xl:text-[30px] 2xl:text-[38px] font-bold text-center md:text-start font-cinzel">
