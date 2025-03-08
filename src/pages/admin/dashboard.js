@@ -143,32 +143,48 @@ export default function AdminPage() {
       <h1 className="text-3xl font-bold text-center text-[#154E59]">Admin Dashboard</h1>
 
       <div className="mt-6 flex flex-col md:flex-row gap-4">
-        <input
-          type="date"
-          className="border px-4 py-2 rounded"
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-        />
-        <input
-          type="time"
-          className="border px-4 py-2 rounded"
-          value={startTime}
-          onChange={(e) => setStartTime(e.target.value)}
-        />
-        <input
-          type="time"
-          className="border px-4 py-2 rounded"
-          value={endTime}
-          onChange={(e) => setEndTime(e.target.value)}
-        />
-        <button
-          className="bg-[#154E59] text-white px-4 py-2 rounded disabled:opacity-50"
-          onClick={addSlot}
-          disabled={!selectedDate || !startTime || !endTime}
-        >
-          Add Slot
-        </button>
-      </div>
+  <div className="flex flex-col">
+    <label htmlFor="date" className="text-sm font-medium text-gray-700">Select Date</label>
+    <input
+      id="date"
+      type="date"
+      className="border px-4 py-2 rounded"
+      value={selectedDate}
+      onChange={(e) => setSelectedDate(e.target.value)}
+    />
+  </div>
+
+  <div className="flex flex-col">
+    <label htmlFor="start-time" className="text-sm font-medium text-gray-700">Start Time</label>
+    <input
+      id="start-time"
+      type="time"
+      className="border px-4 py-2 rounded"
+      value={startTime}
+      onChange={(e) => setStartTime(e.target.value)}
+    />
+  </div>
+
+  <div className="flex flex-col">
+    <label htmlFor="end-time" className="text-sm font-medium text-gray-700">End Time</label>
+    <input
+      id="end-time"
+      type="time"
+      className="border px-4 py-2 rounded"
+      value={endTime}
+      onChange={(e) => setEndTime(e.target.value)}
+    />
+  </div>
+
+  <button
+    className="bg-[#154E59] text-white px-4 py-2 rounded disabled:opacity-50 self-end"
+    onClick={addSlot}
+    disabled={!selectedDate || !startTime || !endTime}
+  >
+    Add Slot
+  </button>
+</div>
+
 
       {message && <p className="mt-2 text-sm text-red-500">{message}</p>}
 
