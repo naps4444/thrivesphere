@@ -80,30 +80,39 @@ export default function AdminPage() {
 
   const removeSlot = async (date, timeRange) => {
     try {
-      console.log("Removing Slot:", { date, timeRange });
-
+      console.log("Attempting to remove slot:", { date, timeRange });
+  
+      // Send delete request to API
       await axios.delete("/api/admin/availability", {
         headers: { "Content-Type": "application/json" },
-        data: { date: new Date(date).toISOString().split("T")[0], timeRange },
+        data: { date, timeRange },
       });
-
+  
       // Update state to remove slot from UI
       setAvailableSlots((prev) => {
         const updatedSlots = { ...prev };
-        updatedSlots[date] = updatedSlots[date].filter((slot) => slot !== timeRange);
-
-        if (updatedSlots[date].length === 0) {
-          delete updatedSlots[date]; // Remove date if no slots left
+  
+        if (updatedSlots[date]) {
+          // Remove the specific time from the array
+          updatedSlots[date] = updatedSlots[date].filter((time) => time !== timeRange);
+  
+          // If the date has no more slots, remove the date entry
+          if (updatedSlots[date].length === 0) {
+            delete updatedSlots[date];
+          }
         }
-
-        return updatedSlots;
+  
+        return updatedSlots; // Update state
       });
-
+  
       console.log("Slot removed successfully!");
     } catch (error) {
       console.error("Error removing slot:", error.response?.data || error.message);
     }
   };
+  
+  
+  
 
   const saveAvailability = async () => {
     setLoading(true);
