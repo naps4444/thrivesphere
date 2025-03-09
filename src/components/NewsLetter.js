@@ -1,40 +1,8 @@
-import { useState } from "react";
+import { useSubscribe } from "@/hooks/useSubscribe";
 import Image from "next/image";
 
 const NewsLetter = () => {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleSubscribe = async (e) => {
-    e.preventDefault();
-
-    if (!email) {
-      alert("Please enter an email!");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const response = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      if (response.ok) {
-        alert("Subscribed successfully!");
-        setEmail("");
-      } else {
-        alert("Failed to subscribe. Try again.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("An error occurred. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { email, setEmail, loading, handleSubscribe } = useSubscribe();
 
   return (
     <div className="relative xl:container mx-auto bg-[#908E58] lg:text-xl xl:text-2xl 2xl:text-3xl">
