@@ -179,9 +179,6 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
 
 
 const BookingForm = ({ selectedDate, selectedTime }) => {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [answers, setAnswers] = useState({});
   const [showQuestionnaire, setShowQuestionnaire] = useState(null);
   const [questionnaireCompleted, setQuestionnaireCompleted] = useState(false);
@@ -212,20 +209,12 @@ const BookingForm = ({ selectedDate, selectedTime }) => {
         />
       )}
 
-      {showQuestionnaire !== null && questionnaireCompleted && (
+      {showQuestionnaire !== null && (
         <div className="bg-white p-4 rounded-lg shadow-md w-full">
           <form action="https://formspree.io/f/mrbenyav" method="POST" className="space-y-4">
-            <input
-              type="hidden"
-              name="questionnaire_answers"
-              value={JSON.stringify(answers, null, 2)}
-            />
-            <input type="hidden" name="selected_date" value={selectedDate.toISOString().split("T")[0]} />
-            <input type="hidden" name="selected_time" value={selectedTime} />
-
-            <input type="text" name="full_name" placeholder="Full Name" required className="w-full p-2 border rounded-md" />
-            <input type="email" name="email" placeholder="Email" required className="w-full p-2 border rounded-md" />
-            <input type="tel" name="phone" placeholder="Phone Number" required className="w-full p-2 border rounded-md" />
+            <input type="text" name="full_name" required className="w-full p-2 border rounded-md" placeholder="Full Name" />
+            <input type="email" name="email" required className="w-full p-2 border rounded-md" placeholder="Email" />
+            <input type="tel" name="phone" required className="w-full p-2 border rounded-md" placeholder="Phone Number" />
 
             <button type="submit" className="bg-[#A8781C] text-white px-4 py-2 rounded w-full">
               Confirm Booking
@@ -236,6 +225,5 @@ const BookingForm = ({ selectedDate, selectedTime }) => {
     </div>
   );
 };
-
 
 export default BookingForm;
