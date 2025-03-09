@@ -3,7 +3,7 @@ import Image from "next/image";
 const Footer = () => {
     return (
       <>
-      <div className="bg-[#CCC193] text-black flex flex-col md:flex-row px-8 md:px-16 lg:px-24 py-10 md:justify-between xl:container mx-auto">
+      <div className="bg-[#CCC193] text-black flex flex-col md:flex-row px-8 md:px-16 lg:px-24 py-10 md:justify-between xl:container mx-auto lg:text-xl xl:text-2xl 2xl:text-3xl">
         <div className="flex flex-col gap-5">
             <div>
                 <h1 className="font-semibold font-georgia">Book a Consultation</h1>
@@ -32,7 +32,7 @@ const Footer = () => {
             <div className="tracking-wide md:tracking-normal">
                 <h1 className="font-medium font-georgia">Let’s Connect</h1>
 
-                <div className="flex gap-4">
+                <div className="flex gap-4 md:mt-2">
                 <input
   type="email"
   placeholder="Enter your email here*"

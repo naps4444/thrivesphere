@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function AdminPage() {
   const [availableSlots, setAvailableSlots] = useState({}); // Store slots as an object
@@ -177,12 +178,13 @@ export default function AdminPage() {
   </div>
 
   <button
-    className="bg-[#154E59] text-white px-4 py-2 rounded disabled:opacity-50 self-end"
-    onClick={addSlot}
-    disabled={!selectedDate || !startTime || !endTime}
-  >
-    Add Slot
-  </button>
+  className="bg-[#154E59] text-white px-4 py-2 rounded disabled:opacity-50 self-end transition-all duration-300 ease-in-out hover:bg-[#1b6773]  hover:border-black hover:scale-105 disabled:cursor-not-allowed"
+  onClick={addSlot}
+  disabled={!selectedDate || !startTime || !endTime}
+>
+  Add Slot
+</button>
+
 </div>
 
 
@@ -214,12 +216,20 @@ export default function AdminPage() {
       </ul>
 
       <button
-        className="bg-[#8b5e15] text-white px-6 py-2 mt-4 rounded"
-        onClick={saveAvailability}
-        disabled={loading || Object.keys(availableSlots).length === 0}
-      >
-        {loading ? "Saving..." : "Save Availability"}
-      </button>
+  className="bg-[#8b5e15] text-white px-6 py-2 mt-4 rounded border-[1px] border-[#CCC193] transition-all duration-300 ease-in-out hover:bg-[#a6751a] hover:text-black hover:border-black hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+  onClick={saveAvailability}
+  disabled={loading || Object.keys(availableSlots).length === 0}
+>
+  {loading ? "Saving..." : "Save Availability"}
+</button>
+
+
+
+      <Link href="/subscribers">
+            <button className="px-6 py-2 mt-4 rounded-md border-[#CCC193] border-[1px] mx-auto w-full text-[#FFFFFF] bg-[#154E59] font-cinzel transition-all duration-300 ease-in-out hover:bg-[#CCC193] hover:text-black hover:border-black hover:scale-105">
+                Go to Subscribers
+            </button>
+        </Link>
     </div>
   );
 }

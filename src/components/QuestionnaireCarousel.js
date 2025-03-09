@@ -60,11 +60,17 @@ const questions = [
   },
 ];
 
-const QuestionnaireCarousel = ({ answers, setAnswers }) => {
+const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showCompletionMessage, setShowCompletionMessage] = useState(false);
 
   const handleNext = () => {
-    if (currentIndex < questions.length - 1) setCurrentIndex(currentIndex + 1);
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      setShowCompletionMessage(true);
+      onComplete(); // Notify parent component that the questionnaire is done
+    }
   };
 
   const handlePrev = () => {
@@ -86,6 +92,17 @@ const QuestionnaireCarousel = ({ answers, setAnswers }) => {
       };
     });
   };
+
+  if (showCompletionMessage) {
+    return (
+      <div className="text-center bg-white p-4 rounded-lg shadow-md font-rakkas">
+        <h2 className="text-xl font-bold text-green-600">🎉 Congratulations!</h2>
+        <p className="mt-2 text-gray-700">
+          You've successfully answered the questionnaire. You can now fill in your full name, email address, and phone number to submit.
+        </p>
+      </div>
+    );
+  }
 
   const currentQuestion = questions[currentIndex];
 
@@ -160,15 +177,17 @@ const QuestionnaireCarousel = ({ answers, setAnswers }) => {
   );
 };
 
+
 const BookingForm = ({ selectedDate, selectedTime }) => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [answers, setAnswers] = useState({});
   const [showQuestionnaire, setShowQuestionnaire] = useState(null);
+  const [questionnaireCompleted, setQuestionnaireCompleted] = useState(false);
 
   return (
-    <div className="max-w-lg mx-auto space-y-6 font-rakkas">
+    <div className="max-w-lg mx-auto space-y-6 font-rakkas lg:text-xl 2xl:text-2xl">
       {showQuestionnaire === null && (
         <div className="bg-white p-4 rounded-lg shadow-md text-center">
           <h2 className="text-lg font-bold">
@@ -185,20 +204,25 @@ const BookingForm = ({ selectedDate, selectedTime }) => {
         </div>
       )}
 
-      {showQuestionnaire && <QuestionnaireCarousel answers={answers} setAnswers={setAnswers} />}
+      {showQuestionnaire && (
+        <QuestionnaireCarousel
+          answers={answers}
+          setAnswers={setAnswers}
+          onComplete={() => setQuestionnaireCompleted(true)}
+        />
+      )}
 
-      {showQuestionnaire !== null && (
+      {showQuestionnaire !== null && questionnaireCompleted && (
         <div className="bg-white p-4 rounded-lg shadow-md w-full">
           <form action="https://formspree.io/f/mrbenyav" method="POST" className="space-y-4">
-          <input
-    type="hidden"
-    name="questionnaire_answers"
-    value={JSON.stringify(answers, null, 2)} // Formatting JSON with indentation
-  />
+            <input
+              type="hidden"
+              name="questionnaire_answers"
+              value={JSON.stringify(answers, null, 2)}
+            />
             <input type="hidden" name="selected_date" value={selectedDate.toISOString().split("T")[0]} />
             <input type="hidden" name="selected_time" value={selectedTime} />
 
-            {/* User Details */}
             <input type="text" name="full_name" placeholder="Full Name" required className="w-full p-2 border rounded-md" />
             <input type="email" name="email" placeholder="Email" required className="w-full p-2 border rounded-md" />
             <input type="tel" name="phone" placeholder="Phone Number" required className="w-full p-2 border rounded-md" />
@@ -212,5 +236,6 @@ const BookingForm = ({ selectedDate, selectedTime }) => {
     </div>
   );
 };
+
 
 export default BookingForm;

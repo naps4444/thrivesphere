@@ -88,7 +88,7 @@ const ServicePage = () => {
   };
 
   return (
-    <div className="xl:container mx-auto px-6 py-12 text-[#154E59]">
+    <div className="xl:container mx-auto px-6 py-12 text-[#154E59] ">
       <button
         onClick={() => router.back()}
         className="mb-4 px-4 py-2 hover:bg-gray-300 text-gray-700 rounded-lg flex items-center gap-2 font-rakkas"
@@ -101,7 +101,7 @@ const ServicePage = () => {
           <h1 className="text-[30px] lg:text-[42px] font-bold text-center font-cinzel">
             {serviceData.title || "Service Not Found"}
           </h1>
-          <p className="text-center mt-4 font-rakkas text-[18px]">
+          <p className="text-center mt-4 font-rakkas lg:text-xl xl:text-2xl 2xl:text-3xl">
             {serviceData.description}
           </p>
 

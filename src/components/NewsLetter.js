@@ -37,7 +37,7 @@ const NewsLetter = () => {
   };
 
   return (
-    <div className="relative xl:container mx-auto bg-[#908E58]">
+    <div className="relative xl:container mx-auto bg-[#908E58] lg:text-xl xl:text-2xl 2xl:text-3xl">
       <div className="py-10 lg:py-14 w-10/12 md:w-8/12 mx-auto md:mx-[70px] lg:mx-[100px] xl:mx-[100px] text-center md:text-left flex flex-col gap-3">
         <h1 className="text-[#D1C79E] font-cinzel font-semibold">
           SUBSCRIBE TO OUR NEWSLETTER

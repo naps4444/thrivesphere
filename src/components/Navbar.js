@@ -51,11 +51,11 @@ const Navbar = () => {
   };
 
   return (
-    <nav ref={menuRef} className="bg-[#FFF6F1] shadow-md py-4 lg:pt-6 lg:pb-10 xl:container mx-auto font-georgia">
+    <nav ref={menuRef} className="bg-[#FFF6F1] shadow-md py-4 lg:pt-6 lg:pb-10 xl:container mx-auto font-georgia xl:text-xl ">
       <div className="flex justify-between items-center">
         {/* Logo */}
         <button onClick={() => handleNavigation("/")} className="text-xl -ml-6 lg:ml-0 font-bold text-gray-800">
-          <Image src="/logo.svg" alt="logo" height={180} width={180} />
+          <Image src="/logo.svg" alt="logo" height={180} width={180} className="md:w-[200px] lg:w-[240px]" />
         </button>
 
         {/* Mobile Menu Button */}

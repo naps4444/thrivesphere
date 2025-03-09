@@ -8,7 +8,7 @@ const Section1 = () => {
 
             <h1 className="font-semibold text-center font-cinzel">YOU WERE MEANT FOR MORE, OWN IT!</h1>
 
-            <p className=" mx-auto md:w-7/12 2xl:w-8/12 text-center font-rakkas font-semibold tracking-wide md:tracking-normal">You don’t have to stay stuck. the future you dream of is not far away, it’s just beyond your doubts. Let us help you bridge the gap and make it your reality.</p>
+            <p className=" mx-auto md:w-7/12 2xl:w-8/12 text-center font-rakkas font-semibold tracking-wide md:tracking-normal lg:text-xl xl:text-2xl">You don’t have to stay stuck. the future you dream of is not far away, it’s just beyond your doubts. Let us help you bridge the gap and make it your reality.</p>
 
         </div>
         
