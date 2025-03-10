@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useSubscribe } from "@/hooks/useSubscribe";
 import Image from "next/image";
@@ -7,15 +7,30 @@ const Footer = () => {
   const { email, setEmail, loading, handleSubscribe } = useSubscribe();
 
   return (
-    <div className="bg-[#CCC193] text-black flex flex-col md:flex-row px-8 md:px-16 lg:px-24 py-10 md:justify-between xl:container mx-auto lg:text-xl  2xl:text-2xl">
+    <div className="bg-[#CCC193] text-black flex flex-col md:flex-row px-8 md:px-16 lg:px-24 py-10 md:justify-between xl:container mx-auto lg:text-xl 2xl:text-2xl">
       <div className="flex flex-col gap-5">
         <div>
           <h1 className="font-semibold font-georgia">Book a Consultation</h1>
         </div>
 
-        <div className="font-rakkas">
+        <div className="font-rakkas mt-2">
           <p className="tracking-wide md:tracking-normal">Call +1 (782) 440-5220</p>
           <p className="mt-1 tracking-widest md:tracking-normal">Email: info@thrivespherecoaching.com</p>
+        </div>
+
+        <div className="bg-black w-full rounded-full justify-between py-3 lg:py-4 px-5 hidden mt-10 md:flex">
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="transition-all duration-300 hover:scale-110">
+            <Image src="/x.svg" alt="x.com" width={100} height={100} className="w-6 md:w-7" />
+          </a>
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="transition-all duration-300 hover:scale-110">
+            <Image src="/face.svg" alt="facebook.com" width={100} height={100} className="w-6 md:w-7" />
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="transition-all duration-300 hover:scale-110">
+            <Image src="/insta.svg" alt="instagram.com" width={100} height={100} className="w-6 md:w-7" />
+          </a>
+          <a href="https://whatsapp.com" target="_blank" rel="noopener noreferrer" className="transition-all duration-300 hover:scale-110">
+            <Image src="/whats.svg" alt="whatsapp.com" width={100} height={100} className="w-6 md:w-7" />
+          </a>
         </div>
       </div>
 
@@ -35,13 +50,13 @@ const Footer = () => {
         <div className="tracking-wide md:tracking-normal">
           <h1 className="font-medium font-georgia">Let’s Connect</h1>
 
-          <form onSubmit={handleSubscribe} className="flex gap-4 md:mt-2">
+          <form onSubmit={handleSubscribe} className="flex md:gap-4 md:mt-2">
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email here*"
-              className="py-2 bg-[#CCC193] text-black placeholder-black px-2 border-[1px] border-black font-rage placeholder:font-rage outline-none"
+              className="py-2 bg-[#CCC193] text-black placeholder-black px-2 border-[1px] border-black font-rage placeholder:font-rage outline-none w-full"
               required
             />
             <button
@@ -52,6 +67,21 @@ const Footer = () => {
               {loading ? "Submitting..." : "Join"}
             </button>
           </form>
+        </div>
+
+        <div className="bg-black flex w-full rounded-full justify-between py-2 px-4 md:hidden">
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="transition-all duration-300 hover:scale-110">
+            <Image src="/x.svg" alt="x.com" width={100} height={100} className="w-6 md:w-10" />
+          </a>
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="transition-all duration-300 hover:scale-110">
+            <Image src="/face.svg" alt="facebook.com" width={100} height={100} className="w-6 md:w-10" />
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="transition-all duration-300 hover:scale-110">
+            <Image src="/insta.svg" alt="instagram.com" width={100} height={100} className="w-6 md:w-10" />
+          </a>
+          <a href="https://whatsapp.com" target="_blank" rel="noopener noreferrer" className="transition-all duration-300 hover:scale-110">
+            <Image src="/whats.svg" alt="whatsapp.com" width={100} height={100} className="w-6 md:w-10" />
+          </a>
         </div>
       </div>
     </div>

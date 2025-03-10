@@ -22,7 +22,7 @@ const NewsLetter = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your Email Address"
-            className="py-1 px-2 lg:py-2 w-8/12 xl:w-9/12 font-rakkas border rounded"
+            className="py-1 px-2 lg:py-2 w-8/12 xl:w-9/12 font-rakkas placeholder:text-black rounded outline-none border-[1px] border-black bg-[#8b8a6d]"
             required
           />
           <button
