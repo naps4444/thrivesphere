@@ -24,7 +24,7 @@ const Author = () => {
 
         <h1 className="mt-8 text-base 2xl:text-xl">ABOUT</h1>
 
-        <h1 className="mt-4">TARA C. JAMES</h1>
+        <h1 className="mt-4">NDUKA G. AHILAKA</h1>
 
         <div className="flex flex-col gap-4 mt-2">
         <p>
