@@ -26,7 +26,7 @@ const Footer = () => {
 
         <div className="font-rakkas mt-2">
           <p className="tracking-wide md:tracking-normal">Call +1 (782) 440-5220</p>
-          <p className="mt-1 tracking-widest md:tracking-normal">Email: info@thrivespherecoaching.com</p>
+          <p className="mt-1 tracking-widest md:tracking-normal">Email: thrivesphereorg@outlook.com</p>
         </div>
 
         <div className="flex flex-col gap-2 font-semibold">
