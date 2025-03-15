@@ -22,11 +22,11 @@ const Author = () => {
 
         <div className="my-auto">
 
-        <h1 className="mt-8 text-base 2xl:text-xl">ABOUT</h1>
+        <h1 className="mt-8 text-base 2xl:text-xl font-cinzel">ABOUT</h1>
 
-        <h1 className="mt-4">NDUKA G. AHILAKA</h1>
+        <h1 className="mt-4 font-cinzel lg:text-[36px] font-bold tracking-wide leading-relaxed">NDUKA   AHILAKA</h1>
 
-        <div className="flex flex-col gap-4 mt-2">
+        <div className="flex flex-col gap-4 mt-2 font-volkhov lg:text-xl xl:text-2xl 2xl:text-3xl">
         <p>
         Nduka is a dedicated transformational life and wellness coach with a deep passion for personal growth and development. With years of experience, he has guided countless individuals toward discovering their true potential and reigniting their passions.
         </p>

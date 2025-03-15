@@ -25,7 +25,7 @@ const Hero = () => {
             </h1>
 
             <p className="text-[#FFFFFF] lg:w-11/12 tracking-widest md:tracking-normal">
-              FEELING STUCK OR UNCERTAIN OUR EXPERT LIFE COACHING SKILLS HELPS YOU GAIN
+              FEELING STUCK OR UNCERTAIN? OUR EXPERT LIFE COACHING SKILLS HELPS YOU GAIN
               CLARITY, BUILD CONFIDENCE, AND BREAK THROUGH LIMITATIONS. TAKE
               CONTROL OF YOUR FUTURE AND START CREATING A LIFE YOU TRULY LOVE.
             </p>
