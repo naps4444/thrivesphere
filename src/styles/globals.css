@@ -133,5 +133,23 @@ body {
   }
 }
 
+.gradient-border {
+  border-bottom: 2px solid;
+  border-image: linear-gradient(to right, #FFFFFF, #FFD199, #FFD199, #FFD199, #FFFFFF) 1;
+}
+
+/* Hide scrollbar but allow scrolling */
+.scroll-container {
+  overflow-x: auto;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer/Edge */
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+
+
+
 
 
