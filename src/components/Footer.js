@@ -67,7 +67,7 @@ const Footer = () => {
         <div className="tracking-wide md:tracking-normal ">
           <h1 className="font-medium font-georgia">Let’s Connect</h1>
 
-          <form onSubmit={handleSubscribe} className="flex md:gap-4 md:mt-2">
+          <form onSubmit={handleSubscribe} className="flex gap-2 md:gap-4 md:mt-2">
             <input
               type="email"
               value={email}
