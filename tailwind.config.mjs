@@ -18,7 +18,6 @@ export default {
         volkhov: ["Volkhov", "serif"],
         rage: ["Rage Italic", "cursive"],
         lusitana: ["Lusitana", "serif"],
-        rubikMaps: ["Rubik Maps", "system-ui"], // Added Rubik Maps
       },
     },
   },
