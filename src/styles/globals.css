@@ -1,0 +1,183 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Gravitas+One&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
+
+
+
+.gravitas-one-regular {
+  font-family: "Gravitas One", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.amatic-sc-regular {
+  font-family: "Amatic SC", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.amatic-sc-bold {
+  font-family: "Amatic SC", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+
+
+
+
+body {
+    font-size: 0.75rem; 
+  }
+  
+  @media (min-width: 768px) { 
+    body {
+      font-size: 0.875rem; 
+    }
+  }
+  
+  @media (min-width: 1024px) { 
+    body {
+      font-size: 1rem; 
+    }
+  }
+
+  @media (min-width: 1440px) { 
+    body {
+      font-size: 1.25rem; 
+    }
+  }
+
+  @media (min-width: 2560px) { 
+    body {
+      font-size: 1.75rem; 
+    }
+  }
+
+
+  h1 {
+    font-size: 1.5rem; /* 24px */
+  }
+  
+  h2 {
+    font-size: 1.125rem; /* 18px */
+  }
+  
+  @media (min-width: 768px) { 
+    h1 {
+      font-size: 1.575rem; /* 30px */
+    }
+    h2 {
+      font-size: 1.3125rem; /* 21px */
+    }
+  }
+  
+  @media (min-width: 1024px) { 
+    h1 {
+      font-size: 1.975rem; /* 36px */
+    }
+    h2 {
+      font-size: 1.5rem; /* 24px */
+    }
+  }
+  
+  @media (min-width: 1440px) { 
+    h1 {
+      font-size: 2.625rem; /* 42px */
+    }
+    h2 {
+      font-size: 1.875rem; /* 30px */
+    }
+  }
+  
+  @media (min-width: 2560px) { 
+    h1 {
+      font-size: 3.375rem; /* 54px */
+    }
+    h2 {
+      font-size: 2.625rem; /* 42px */
+    }
+  }
+  
+
+  html {
+    scroll-behavior: smooth;
+  }
+  
+ /* Calendar container */
+.react-calendar {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Takes up full width */
+  max-width: 100%; /* Ensures it doesn't shrink */
+  overflow: hidden;
+}
+
+/* Selected date */
+.react-calendar__tile--active {
+  background: #A8781C !important;
+  color: white !important;
+}
+
+/* Disabled (unavailable) dates */
+.react-calendar__tile:disabled {
+  color: gray;
+  cursor: not-allowed;
+}
+
+/* Remove default navigation */
+.react-calendar__navigation {
+  display: none !important;
+}
+
+/* Ensure full width on all screen sizes */
+@media (max-width: 1024px) {
+  .react-calendar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .react-calendar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .react-calendar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .react-calendar {
+    width: 100%;
+  }
+}
+
+.gradient-border {
+  border-bottom: 2px solid;
+  border-image: linear-gradient(to right, #FFFFFF, #FFD199, #FFD199, #FFD199, #FFFFFF) 1;
+}
+
+/* Hide scrollbar but allow scrolling */
+.scroll-container {
+  overflow-x: auto;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer/Edge */
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+
+
+
+
+
