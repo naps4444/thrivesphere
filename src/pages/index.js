@@ -26,7 +26,7 @@ export default function Home() {
       <div>
         <Testimonal/>
       </div>
-      {/* <Numbers /> */}
+      <Numbers />
       <NewsLetter/>
       <Author/>
       <div id="contact">

@@ -51,11 +51,11 @@ const Navbar = () => {
   };
 
   return (
-    <nav ref={menuRef} className="bg-[#FFF6F1] shadow-md py-4 lg:pt-6 lg:pb-10 xl:container mx-auto font-georgia xl:text-xl">
+    <nav ref={menuRef} className="bg-[#FFF6F1] shadow-md py-4 lg:pt-6 lg:pb-10 xl:container mx-auto font-georgia xl:text-xl ">
       <div className="flex justify-between items-center">
         {/* Logo */}
-        <button onClick={() => handleNavigation("/")} className="text-xl -ml-6 lg:ml-0 font-bold text-gray-800 md:-mt-1">
-          <Image src="/logo.svg" alt="logo" height={180} width={180} className="md:w-[180px] lg:w-[230px]" />
+        <button onClick={() => handleNavigation("/")} className="text-xl -ml-6 lg:ml-0 font-bold text-gray-800">
+          <Image src="/logo.svg" alt="logo" height={180} width={180} className="md:w-[200px] lg:w-[240px]" />
         </button>
 
         {/* Mobile Menu Button */}
@@ -66,7 +66,7 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <ul className="hidden md:flex md:space-x-4 lg:space-x-8 xl:space-x-16  lg:mr-8 2xl:space-x-[100px] text-[#154E59]">
+        <ul className="hidden md:flex md:space-x-4 lg:space-x-16 2xl:space-x-[140px] text-[#154E59]">
           {[{ name: "HOME", id: "home" }, { name: "ABOUT", id: "about" }, { name: "SERVICES", id: "services" }, { name: "CONTACT", id: "contact" }].map((item, index) => (
             <li key={index}>
               <button onClick={() => handleScroll(item.id)} className="block py-2 px-4 transition duration-300 ease-in-out hover:text-[#0A2A31]">
@@ -74,12 +74,6 @@ const Navbar = () => {
               </button>
             </li>
           ))}
-          {/* Blog Link */}
-          <li>
-            <button onClick={() => handleNavigation("/blogPage")} className="block py-2 px-4 transition duration-300 ease-in-out hover:text-[#0A2A31]">
-              BLOG
-            </button>
-          </li>
         </ul>
 
         {/* Desktop Buttons */}
@@ -105,12 +99,6 @@ const Navbar = () => {
               </button>
             </li>
           ))}
-          {/* Blog Link */}
-          <li>
-            <button onClick={() => handleNavigation("/blogPage")} className="block py-2 px-4 transition duration-300 ease-in-out hover:text-[#0A2A31]">
-              BLOG
-            </button>
-          </li>
           <div className="pt-2">
             <button onClick={() => handleNavigation("/services/Services")} className="w-full text-white bg-[#154E59] py-3 transition-transform duration-300 hover:scale-105">
               Walk With Us

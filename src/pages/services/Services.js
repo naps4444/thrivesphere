@@ -33,7 +33,7 @@ const OurServices = () => {
 
             <div className="flex flex-col my-auto gap-4 text-[#154E59] md:p-10 py-6 lg:p-16 xl:p-24">
               <h1 className="text-[20px] lg:text-[26px] xl:text-[30px] 2xl:text-[38px] font-bold text-center md:text-start font-cinzel">
-                LET’S CONNECT - 15 MINUTES, COMPLIMENTARY
+                LET’S CONNECT - 30 MINUTES, COMPLIMENTARY
               </h1>
               <p className="font-semibold text-center md:text-start font-rakkas">
                 A quick, judgement-free conversation to understand your needs and explore how coaching can unlock your potential. No commitment just clarity

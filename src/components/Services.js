@@ -37,7 +37,7 @@ const Services = () => {
         },
         {
             title: "PERSONAL GROWTH",
-            description: "Transform into the best version of yourself. Break free from self-doubt, embrace confidence, and develop a growth mindset that fuels success, happiness, and fulfillment in all aspects of life. You deserve more.",
+            description: "Transform into the best version of yourself. Break free from self-doubt, embrace confidence, and develop a growth mindset that fuels success, happiness, and fulfillment in all aspects of life. You deserve More.",
             image: "pre123.svg",
             alt: "woman practicing yoga"
         },

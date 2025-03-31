@@ -230,13 +230,6 @@ export default function AdminPage() {
                 Go to Subscribers
             </button>
         </Link>
-
-
-        <Link href="/admin/createBlogPage">
-            <button className="px-6 py-2 mt-4 rounded-md border-[#CCC193] border-[1px] mx-auto w-full text-[#FFFFFF] bg-[#154E59] font-cinzel transition-all duration-300 ease-in-out hover:bg-[#CCC193] hover:text-black hover:border-black hover:scale-105">
-                Post NewsLetter
-            </button>
-        </Link>
     </div>
   );
 }
