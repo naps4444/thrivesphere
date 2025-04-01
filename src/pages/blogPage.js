@@ -37,7 +37,7 @@ export default function BlogPage() {
           height={100}
           className="w-full opacity-60"
         />
-        <h2 className="text-center text-3xl lg:text-[60px] font-bold absolute text-black amatic-sc-bold">
+        <h2 className="text-center text-3xl lg:text-[40px] font-bold absolute text-black font-lusitana">
           EMPOWER YOUR MIND, ELEVATE YOUR LIFE
         </h2>
       </div>
