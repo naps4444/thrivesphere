@@ -1,7 +1,7 @@
-// src/lib/firebaseAdmin.js
 import * as admin from 'firebase-admin';
 import { getFirestore } from 'firebase-admin/firestore';
 
+// Ensure Firebase Admin is only initialized once
 if (!admin.apps.length) {
   try {
     // Parse the service account JSON from the environment variable
@@ -22,15 +22,23 @@ if (!admin.apps.length) {
       }),
     });
 
-    console.log("Firebase Admin initialized successfully");
+    console.log("✅ Firebase Admin initialized successfully");
   } catch (error) {
-    console.error("Firebase Admin SDK initialization error:", error);
-    throw error;
+    console.error("❌ Firebase Admin SDK initialization error:", error);
+    throw error; // Stop execution if Firebase fails to initialize
   }
 } else {
-  console.log("Firebase Admin is already initialized");
+  console.log("ℹ️ Firebase Admin is already initialized");
 }
 
-// Explicitly pass the default app to getFirestore
-const db = getFirestore(admin.app());
+// Get Firestore instance
+const db = getFirestore();
+
+if (!db) {
+  console.error("❌ Firestore database connection failed to initialize.");
+  throw new Error("Database connection is not initialized");
+}
+
+console.log("✅ Firestore database initialized successfully");
+
 export { db };
