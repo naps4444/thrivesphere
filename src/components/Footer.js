@@ -55,7 +55,7 @@ const Footer = () => {
         <div>
           <h1 className="font-semibold font-georgia">Business Hours</h1>
 
-          <p className="mt-2 font-rakkas tracking-wide md:tracking-normal">Monday to Saturday</p>
+          <p className="mt-6 font-rakkas tracking-wide md:tracking-normal">Monday to Saturday</p>
           <p className="mt-1 font-rakkas tracking-wide md:tracking-normal">8:00 am to 8:00 pm</p>
         </div>
 

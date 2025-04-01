@@ -1,5 +1,5 @@
-import admin from "firebase-admin";
-import { getFirestore } from "firebase-admin/firestore";
+import * as admin from 'firebase-admin';  // Corrected import to use * as admin
+import { getFirestore } from 'firebase-admin/firestore'; // Correctly importing Firestore
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -7,5 +7,7 @@ if (!admin.apps.length) {
   });
 }
 
-const db = getFirestore(); // ✅ No need to pass `admin`
-export { db };
+const db = getFirestore(); // Initialize Firestore using the default Firebase Admin SDK
+
+// Default export of db
+export default db;

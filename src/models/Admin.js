@@ -1,4 +1,4 @@
-import { db } from "@/lib/firestore";
+import { db } from '@/lib/firestore';
 
 export async function getAdminByEmail(email) {
   const snapshot = await db.collection("admins").where("email", "==", email).get();

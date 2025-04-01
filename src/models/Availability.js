@@ -1,4 +1,4 @@
-import db from "../lib/firestore";
+import { db } from '@/lib/firestore';  // Correct import if db is exported from firestore.js
 
 export async function getAvailability() {
   const snapshot = await db.collection("availability").limit(1).get();

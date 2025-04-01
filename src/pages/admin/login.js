@@ -44,7 +44,7 @@ const Login = () => {
   };
 
   return (
-    <div className="grid md:grid-cols-2 min-h-screen">
+    <div className="grid md:grid-cols-2 min-h-screen xl:container mx-auto">
       {/* Left Side - Image */}
       <div className="hidden md:block my-auto">
         <Image

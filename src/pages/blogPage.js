@@ -49,12 +49,12 @@ export default function BlogPage() {
       ) : posts.length === 0 ? (
         <p className="text-center text-gray-500 mt-6">No blog posts available.</p>
       ) : (
-        <div className="border-t-[1px] border-black mt-12 w-11/12 md:w-full mx-auto">
+        <div className="border-t-[1px] border-black mt-4 lg:mt-12 w-11/12 md:w-full mx-auto">
           <div className="w-11/12 mx-auto">
             <h1 className="font-volkhov font-extrabold mt-8 px-4">Recent Blog Posts</h1>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap- w-11/12 mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 md:gap-2 w-11/12 mx-auto">
             {posts.map((post) => {
               return (
 
@@ -82,7 +82,7 @@ export default function BlogPage() {
                 
 
                  
-<div className="flex items-center border-black border-l-[1px] pl-4 mt-2">
+<div className="flex items-center border-black border-l-[1px] pl-3 ml-3 mt-2">
  🏷️
   {Array.isArray(post.postTags) && post.postTags.length > 0 ? (
     post.postTags.map((tag, index) => (
