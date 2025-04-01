@@ -33,5 +33,5 @@ if (!admin.apps.length) {
   console.log("Firebase Admin is already initialized");
 }
 
-// ✅ Correct Firestore import for Firebase Admin SDK
-export const db = admin.firestore();
+const db = admin.firestore();
+export { db };

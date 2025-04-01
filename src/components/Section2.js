@@ -21,7 +21,7 @@ const Section2 = () => {
               <Image src="/iconsec3.svg" alt="icon" height={50} width={50} className="w-10" />
               <h1 className="text-center text-lg font-semibold text-[22px] font-cinzel">CERTIFIED EXPERTISE</h1>
               <p className="text-center w-4/5 mx-auto text-sm font-volkhov tracking-widest md:tracking-normal">
-                ThriveSphere's coaches are trained professionals with proven strategies to help you overcome challenges, gain clarity, and achieve lasting transformation.
+                Our coaches are trained professionals with proven strategies to help you overcome challenges, gain clarity, and achieve lasting transformation.
               </p>
             </div>
           </SwiperSlide>

@@ -30,7 +30,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col gap-2 font-semibold">
-          <p>Let’s Connect - 15 Minutes, Complimentary</p>
+          <p>Let’s Connect -30 Minutes, Complimentary</p>
           <p>Deep Dive - 1 Hour/$100</p>
           <p>Momentum Package - 3 Sessions/$260</p>
         </div>
