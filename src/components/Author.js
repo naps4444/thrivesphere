@@ -32,11 +32,15 @@ const Author = () => {
         </p>
 
         <p>
-        Having overcome his own challenges, Nduka empathizes with those feeling lost or uncertain, offering a supportive, nonjudgmental space for exploration and growth. His coaching philosophy focuses on active listening, tailored guidance, and proven techniques to help clients achieve meaningful breakthroughs.
+        Nduka is a father of two daughters and a husband, employed with the Nova Scotia government in a human rights position. He has been helping and coaching the underprivileged, youth, peers, and other professionals for many years, offering guidance and support to those in need.
         </p>
 
         <p>
-        Whether supporting career-driven professionals or individuals seeking personal transformation, Nduka is committed to fostering long-term growth and empowerment.
+        Having overcome his own challenges, Nduka empathizes with those feeling lost or uncertain, providing a supportive, nonjudgmental space for exploration and growth. His coaching philosophy centers on active listening, tailored guidance, and proven techniques to help clients achieve meaningful breakthroughs.
+        </p>
+        
+        <p>
+        Whether supporting career-driven professionals or individuals seeking personal transformation, Nduka is committed to fostering long-term growth and empowerment.
         </p>
         </div>
 
