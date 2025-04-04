@@ -22,7 +22,10 @@ export default function BlogPage() {
             ...postsData[key],
           }));
 
-          setPosts(postsArray);
+          // Sort posts by the 'createdAt' timestamp in descending order
+          const sortedPosts = postsArray.sort((a, b) => b.createdAt - a.createdAt);
+
+          setPosts(sortedPosts);
         }
       } catch (error) {
         console.error('Error fetching blogs:', error);
