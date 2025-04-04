@@ -1,41 +1,44 @@
-import { db } from "@/lib/firebaseAdmin";
+import { ref, get } from 'firebase/database';
+import { realTimeDb } from '@/lib/firebase';
 
 export const config = {
-  runtime: "nodejs", // ✅ Ensure correct execution in Next.js API
+  runtime: 'nodejs', // Ensure correct execution in Next.js API
 };
 
 export default async function handler(req, res) {
-  const { id } = req.query;
+  const { id } = req.query; // Extract blog post ID from the URL
 
-  if (req.method === "GET") {
+  if (req.method === 'GET') {
     try {
-      console.log(`🟡 Fetching blog post with ID: ${id}`); // ✅ Log request ID
+      console.log(`🟡 Fetching blog post with ID: ${id}`); // Log the request ID
 
-      // ✅ Use Firestore Admin SDK correctly
-      const docRef = db.collection("blogs").doc(id);
-      const docSnap = await docRef.get();
+      // Reference to the blog post in the Realtime Database
+      const postRef = ref(realTimeDb, `blogs/${id}`);
+      const snapshot = await get(postRef);
 
-      if (!docSnap.exists) {
+      // Check if the post exists
+      if (snapshot.exists()) {
+        const postData = snapshot.val();
+        console.log(`✅ Blog post found:`, postData);
+
+        // Include createdAt if available, otherwise set it to null
+        const createdAt = postData.createdAt ? postData.createdAt : null;
+
+        // Return the blog post data along with createdAt
+        return res.status(200).json({
+          id,
+          ...postData,
+          createdAt,
+        });
+      } else {
         console.log(`❌ Blog post with ID ${id} not found.`);
-        return res.status(404).json({ message: "Blog post not found" });
+        return res.status(404).json({ message: `Blog post with ID ${id} not found` });
       }
-
-      console.log(`✅ Blog post found:`, docSnap.data());
-
-      // Ensure we return createdAt as part of the response, possibly in Timestamp format.
-      const data = docSnap.data();
-      const createdAt = data.createdAt ? data.createdAt.toDate().toISOString() : null; // Ensure it's a valid ISO string
-
-      return res.status(200).json({
-        id: docSnap.id,
-        ...data,
-        createdAt, // Include createdAt in the response
-      });
     } catch (error) {
-      console.error("❌ Error fetching blog:", error);
+      console.error("❌ Error fetching blog post:", error);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   }
 
-  return res.status(405).end();
+  return res.status(405).end(); // Method Not Allowed if not GET request
 }

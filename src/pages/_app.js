@@ -5,6 +5,8 @@ import "@/styles/globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { SessionProvider } from "next-auth/react";
+import { ToastContainer } from "react-toastify";  // Import ToastContainer
+import "react-toastify/dist/ReactToastify.css";  // Import Toastify CSS
 
 export default function App({ Component, pageProps }) {
   const [loading, setLoading] = useState(false);
@@ -35,6 +37,7 @@ export default function App({ Component, pageProps }) {
       <Navbar />
       <Component {...pageProps} />
       <Footer />
+      <ToastContainer /> {/* Add ToastContainer to show notifications */}
     </SessionProvider>
   );
 }

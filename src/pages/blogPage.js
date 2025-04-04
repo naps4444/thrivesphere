@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { BlinkBlur } from "react-loading-indicators";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { BlinkBlur } from 'react-loading-indicators';
+import { ref, get } from 'firebase/database'; // Import necessary functions from Firebase
+import { realTimeDb } from '@/lib/firebase';
 
 export default function BlogPage() {
   const [posts, setPosts] = useState([]); // Ensure posts is always an array
@@ -10,13 +12,20 @@ export default function BlogPage() {
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const response = await fetch("/api/blogPage"); // Fetch from your API
-        if (!response.ok) throw new Error("Failed to fetch blogs");
+        const postsRef = ref(realTimeDb, 'blogs'); // Reference to the 'blogs' node in Firebase
+        const snapshot = await get(postsRef); // Fetch data from the database
+        const postsData = snapshot.val();
 
-        const blogs = await response.json();
-        setPosts(Array.isArray(blogs) ? blogs : []); // Ensure blogs is an array
+        if (postsData) {
+          const postsArray = Object.keys(postsData).map((key) => ({
+            id: key,
+            ...postsData[key],
+          }));
+
+          setPosts(postsArray);
+        }
       } catch (error) {
-        console.error("Error fetching blogs:", error);
+        console.error('Error fetching blogs:', error);
         setPosts([]); // Ensure posts is an empty array in case of an error
       } finally {
         setLoading(false);
@@ -25,6 +34,13 @@ export default function BlogPage() {
 
     fetchPosts();
   }, []);
+
+  // Format the date from the Unix timestamp
+  const formatDate = (timestamp) => {
+    if (!timestamp) return 'Unknown Date & Time';
+    const date = new Date(Number(timestamp)); // Convert the Unix timestamp (milliseconds)
+    return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleString();
+  };
 
   return (
     <div className="mx-auto xl:container">
@@ -44,8 +60,8 @@ export default function BlogPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-[150px] bg-gray-100">
-        <BlinkBlur color="#154E59" size="medium" text="ThriveSphere" textColor="" />
-      </div>
+          <BlinkBlur color="#154E59" size="medium" text="ThriveSphere" />
+        </div>
       ) : posts.length === 0 ? (
         <p className="text-center text-gray-500 mt-6">No blog posts available.</p>
       ) : (
@@ -55,58 +71,51 @@ export default function BlogPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 md:gap-2 w-11/12 mx-auto">
-            {posts.map((post) => {
-              return (
-
-                 <Link href={`/blogPage/${post.id}`} className="">
-                    
-                
-                <div key={post.id} className=" rounded-lg p-1">
+            {posts.map((post) => (
+              <Link href={`/blogPage/${post.id}`} key={post.id}>
+                <div className="rounded-lg p-4 hover:shadow-lg transition-shadow">
                   <img
                     src={post.image}
                     alt={post.title}
-                    className="w-full lg:h-[500px] object-cover rounded"
+                    className="w-full lg:h-[300px] object-cover rounded"
                   />
-                  <h3 className="text-3xl font-bold mt-2 py-2 font-cinzel md:px-6">{post.title}</h3>
-                  <p className="text-gray-600 font-volkhov md:px-6">
-                    {post.description ? post.description.substring(0, 200) : ""} <span className="text-[#a98f26] hover:text-[#0b8ad8]">...Read More</span>
+                  <h3 className="text-2xl font-bold mt-4 py-2 font-cinzel">{post.title}</h3>
+                  <p className="text-gray-600 font-volkhov text-sm mb-4">
+                    {post.description && post.description.length > 200 ? (
+                      <>
+                        {post.description.substring(0, 200)}...
+                        <span className="text-[#20b1ce] cursor-pointer hover:text-[#0A2A31] ml-1">
+                          read more
+                        </span>
+                      </>
+                    ) : (
+                      post.description || 'No description available.'
+                    )}
                   </p>
 
-                 
+                  {/* Tags Section */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {Array.isArray(post.tags) && post.tags.length > 0 ? (
+                      post.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className="bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded"
+                        >
+                          #{tag}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-gray-400 text-xs">No tags available</span>
+                    )}
+                  </div>
 
-                  
-
-                 <div className="grid grid-cols-2  items-center md:px-6">
-                 <p className="text-sm text-gray-500 mt-2">🗓️ {post.createdAt || "Unknown Date & Time"}</p>
-
-                
-
-                 
-<div className="flex items-center border-black border-l-[1px] pl-3 ml-3 mt-2">
- 🏷️
-  {Array.isArray(post.postTags) && post.postTags.length > 0 ? (
-    post.postTags.map((tag, index) => (
-      <span
-        key={index}
-        className="bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded"
-      >
-        #{tag}
-      </span>
-    ))
-  ) : (
-    <span className="text-gray-400 text-xs">No tags available</span>
-  )}
-</div>
-
-                 </div>
-                  
-
-                  
+                  {/* Date */}
+                  <p className="text-sm text-gray-500">
+                    🗓️ {formatDate(post.createdAt)} {/* Display formatted date */}
+                  </p>
                 </div>
-
-                </Link>
-              );
-            })}
+              </Link>
+            ))}
           </div>
         </div>
       )}
