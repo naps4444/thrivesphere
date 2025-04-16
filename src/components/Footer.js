@@ -25,9 +25,18 @@ const Footer = () => {
         </div>
 
         <div className="font-rakkas mt-2">
-          <p className="tracking-wide md:tracking-normal">Call +1 (782) 440-5220</p>
-          <p className="mt-1 tracking-widest md:tracking-normal">Email: thrivesphereorg@outlook.com</p>
-        </div>
+  {/* <p className="tracking-wide md:tracking-normal">Call +1 (782) 440-5220</p> */}
+  <p className="mt-1 tracking-widest md:tracking-normal">
+    Email:{" "}
+    <a
+      href="mailto:thrivesphereorg@outlook.com"
+      className=" hover:bg-[#878165] hover:text-white transition-colors duration-200"
+    >
+      thrivesphereorg@outlook.com
+    </a>
+  </p>
+</div>
+
 
         <div className="flex flex-col gap-2 font-semibold">
           <p>Let’s Connect - 15 Minutes, Complimentary</p>

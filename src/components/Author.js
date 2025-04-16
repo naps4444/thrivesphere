@@ -24,7 +24,7 @@ const Author = () => {
 
         <h1 className="mt-8 text-base 2xl:text-xl font-cinzel">ABOUT</h1>
 
-        <h1 className="mt-4 font-cinzel lg:text-[36px] font-bold tracking-wide leading-relaxed">NDUKA   AHILAKA "ND"</h1>
+        <h1 className="mt-4 font-cinzel lg:text-[36px] font-bold tracking-wide leading-relaxed">NDUKA (ND) AHILAKA</h1>
 
         <div className="flex flex-col gap-4 mt-2 font-volkhov lg:text-xl xl:text-2xl 2xl:text-3xl">
         <p>
