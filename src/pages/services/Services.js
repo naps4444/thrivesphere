@@ -43,12 +43,10 @@ const OurServices = () => {
           {/* Section 1 */}
           <div className="grid md:grid-cols-2 justify-between mt-5 py-4 md:py-10 lg:py-14 px-6">
             <Image
-              src="/svv1.svg"
+              src="/svv1.jpg"
               alt="smiling woman on white"
               height={500}
               width={500}
-              placeholder="blur"
-              blurDataURL="/svv1low.png"
               className="mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 border-black border-[1px] p-[1px]"
             />
 
@@ -87,12 +85,10 @@ const OurServices = () => {
               </div>
 
               <Image
-                src="/svv2.svg"
+                src="/svv2.jpg"
                 alt="smiling woman on white"
                 height={500}
                 width={500}
-                placeholder="blur"
-                blurDataURL="/svv2low.png"
                 className="mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 border-white border-[1px] p-[1px]"
               />
             </div>
@@ -101,12 +97,10 @@ const OurServices = () => {
           {/* Section 3 */}
           <div className="grid md:grid-cols-2 justify-between mt-5 py-4 md:py-10 lg:py-14 px-6">
             <Image
-              src="/svv3.svg"
+              src="/svv3.jpg"
               alt="smiling woman on white"
               height={500}
               width={500}
-              placeholder="blur"
-              blurDataURL="/svv3low.png"
               className="mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 border-black border-[1px] p-[1px]"
             />
 
