@@ -1,13 +1,20 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { BlinkBlur } from "react-loading-indicators";
+import { useState } from "react";
+import clsx from "clsx";
 
-const ServiceCard = ({ title, description, image, alt, handleBookNow, onImageLoad }) => {
+const ServiceCard = ({ title, description, image, alt, handleBookNow }) => {
+  const [loaded, setLoaded] = useState(false);
   const blurDataURL = image.replace(".svg", "low.png");
 
   return (
-    <div className="text-white p-6 rounded-lg shadow-lg w-full sm:w-[300px] mx-auto md:w-[210px] lg:w-[290px] xl:w-[370px] 2xl:w-[450px] flex flex-col">
+    <div className="text-white p-6 rounded-lg shadow-lg w-full sm:w-[300px] mx-auto md:w-[210px] lg:w-[290px] xl:w-[370px] 2xl:w-[450px] flex flex-col relative">
+      {/* Skeleton Placeholder */}
+      {!loaded && (
+        <div className="w-full h-[250px] bg-gray-300 animate-pulse rounded-md mb-4" />
+      )}
+
+      {/* Actual Image */}
       <Image
         src={`/${image}`}
         alt={alt}
@@ -15,15 +22,24 @@ const ServiceCard = ({ title, description, image, alt, handleBookNow, onImageLoa
         width={500}
         placeholder="blur"
         blurDataURL={`/${blurDataURL}`}
-        className="w-full mx-auto"
-        onLoadingComplete={onImageLoad}
+        className={clsx(
+          "w-full h-auto mx-auto rounded-md transition-opacity duration-500 mb-4",
+          loaded ? "opacity-100 relative" : "opacity-0 absolute"
+        )}
+        onLoadingComplete={() => setLoaded(true)}
       />
+
+      {/* Title */}
       <h1 className="text-center md:text-[18px] lg:text-[20px] xl:text-[25px] mt-5 md:font-semibold font-cinzel">
         {title}
       </h1>
+
+      {/* Description */}
       <p className="text-center font-rakkas tracking-wide flex-1 my-4 lg:text-xl">
         {description}
       </p>
+
+      {/* CTA Button */}
       <button
         onClick={handleBookNow}
         className="mt-auto px-6 py-2 border-[#CCC193] border-[1px] mx-auto w-full text-[#FFFFFF] bg-[#154E59] font-cinzel transition-all duration-300 ease-in-out hover:bg-[#CCC193] hover:text-black hover:border-black hover:scale-105"
@@ -36,17 +52,6 @@ const ServiceCard = ({ title, description, image, alt, handleBookNow, onImageLoa
 
 const Services = () => {
   const router = useRouter();
-  const [imagesLoaded, setImagesLoaded] = useState(0);
-  const [timeoutDone, setTimeoutDone] = useState(false);
-  const totalImages = 3;
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setTimeoutDone(true);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleBookNow = () => {
     router.push("/services/Services");
@@ -76,26 +81,8 @@ const Services = () => {
     },
   ];
 
-  const handleImageLoad = () => {
-    setImagesLoaded((prev) => prev + 1);
-  };
-
-  const allLoaded = imagesLoaded >= totalImages || timeoutDone;
-
   return (
     <div className="relative mx-auto xl:container">
-      {/* 🔄 Fullscreen Loader using BlinkBlur */}
-      {!allLoaded && (
-        <div className="fixed inset-0 z-50 bg-white bg-opacity-70 flex items-center justify-center">
-          <BlinkBlur
-            color="#154E59"
-            size="medium"
-            text="ThriveSphere"
-            textColor="#154E59"
-          />
-        </div>
-      )}
-
       {/* Section Title */}
       <div className="flex justify-between pb-6 md:pb-10 md:pt-6 px-4 lg:px-10">
         <Image
@@ -137,7 +124,6 @@ const Services = () => {
               image={service.image}
               alt={service.alt}
               handleBookNow={handleBookNow}
-              onImageLoad={handleImageLoad}
             />
           ))}
         </div>
