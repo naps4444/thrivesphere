@@ -13,7 +13,13 @@ const OurServices = () => {
       <div className="px- xl:container mx-auto lg:text-xl  2xl:text-2xl">
         <div className="flex justify-between py-6 pt-10 w-11/12 xl:w-full mx-auto lg:px-10 border-black border-b-[1px] lg:border-b-[2px]">
           <div>
-            <Image src="/leftic.svg" alt="left icon" width={100} height={100} className="w-4 md:w-6 lg:w-8 xl:w-10 2xl:w-14" />
+            <Image
+              src="/leftic.svg"
+              alt="left icon"
+              width={100}
+              height={100}
+              className="w-4 md:w-6 lg:w-8 xl:w-10 2xl:w-14"
+            />
           </div>
 
           <div className="flex justify-center flex-col items-center">
@@ -23,13 +29,28 @@ const OurServices = () => {
           </div>
 
           <div>
-            <Image src="/rightic.svg" alt="right icon" width={100} height={100} className="w-4 md:w-6 lg:w-8 xl:w-10 2xl:w-14" />
+            <Image
+              src="/rightic.svg"
+              alt="right icon"
+              width={100}
+              height={100}
+              className="w-4 md:w-6 lg:w-8 xl:w-10 2xl:w-14"
+            />
           </div>
         </div>
 
         <div>
+          {/* Section 1 */}
           <div className="grid md:grid-cols-2 justify-between mt-5 py-4 md:py-10 lg:py-14 px-6">
-            <Image src="/svv1.svg" alt="smiling woman on white" height={100} width={100} className="mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 border-black border-[1px] p-[1px]" />
+            <Image
+              src="/svv1.svg"
+              alt="smiling woman on white"
+              height={500}
+              width={500}
+              placeholder="blur"
+              blurDataURL="/svv1low.png"
+              className="mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 border-black border-[1px] p-[1px]"
+            />
 
             <div className="flex flex-col my-auto gap-4 text-[#154E59] md:p-10 py-6 lg:p-16 xl:p-24">
               <h1 className="text-[20px] lg:text-[26px] xl:text-[30px] 2xl:text-[38px] font-bold text-center md:text-start font-cinzel">
@@ -47,6 +68,7 @@ const OurServices = () => {
             </div>
           </div>
 
+          {/* Section 2 */}
           <div className="mt-5 py-8 md:py-10 lg:py-14 bg-[#154E59] text-white">
             <div className="flex flex-col-reverse md:grid md:grid-cols-2 justify-between w-full px-6">
               <div className="flex flex-col my-auto gap-4 md:p-10 py-6 lg:p-16 xl:p-24">
@@ -64,12 +86,29 @@ const OurServices = () => {
                 </button>
               </div>
 
-              <Image src="/svv2.svg" alt="smiling woman on white" height={100} width={100} className="mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 border-white border-[1px] p-[1px]" />
+              <Image
+                src="/svv2.svg"
+                alt="smiling woman on white"
+                height={500}
+                width={500}
+                placeholder="blur"
+                blurDataURL="/svv2low.png"
+                className="mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 border-white border-[1px] p-[1px]"
+              />
             </div>
           </div>
 
+          {/* Section 3 */}
           <div className="grid md:grid-cols-2 justify-between mt-5 py-4 md:py-10 lg:py-14 px-6">
-            <Image src="/svv3.svg" alt="smiling woman on white" height={100} width={100} className="mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 border-black border-[1px] p-[1px]" />
+            <Image
+              src="/svv3.svg"
+              alt="smiling woman on white"
+              height={500}
+              width={500}
+              placeholder="blur"
+              blurDataURL="/svv3low.png"
+              className="mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 border-black border-[1px] p-[1px]"
+            />
 
             <div className="flex flex-col my-auto gap-4 text-[#154E59] md:p-10 py-6 lg:p-16 xl:p-24">
               <h1 className="text-[20px] lg:text-[26px] xl:text-[30px] 2xl:text-[38px] font-bold text-center md:text-start font-cinzel">
