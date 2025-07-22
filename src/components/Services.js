@@ -62,21 +62,21 @@ const Services = () => {
       title: "CAREER DEVELOPMENT",
       description:
         "Unlock your true potential and build a fulfilling career with expert guidance. Gain clarity, confidence, and strategies to navigate challenges, seize opportunities, and achieve long-term professional success. Your future starts now.",
-      image: "carr123.svg",
+      image: "carr123.jpg",
       alt: "man in suit",
     },
     {
       title: "PERSONAL GROWTH",
       description:
         "Transform into the best version of yourself. Break free from self-doubt, embrace confidence, and develop a growth mindset that fuels success, happiness, and fulfillment in all aspects of life. You deserve more.",
-      image: "pre123.svg",
+      image: "pre123.jpg",
       alt: "woman practicing yoga",
     },
     {
       title: "EMOTIONAL WELL-BEING",
       description:
         "Find balance, inner peace, and emotional strength. Learn to manage stress, overcome fears, and cultivate resilience with expert support. Prioritize your mental and emotional health to live a more fulfilling, joyful life.",
-      image: "imgg33.svg",
+      image: "imgg33.jpg",
       alt: "peaceful woman with a flower",
     },
   ];
