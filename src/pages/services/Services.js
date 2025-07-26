@@ -1,81 +1,49 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { BlinkBlur } from "react-loading-indicators";
 
+// LoadableImage component
+const LoadableImage = ({ src, alt, width, height, className }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <div
+      className={`relative overflow-hidden ${
+        loaded ? "" : "bg-gray-300 animate-pulse"
+      } ${className}`}
+      style={{ display: "inline-block" }}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        onLoad={() => setLoaded(true)}
+        onError={() => setLoaded(true)}
+        className={`transition-opacity duration-500 ${
+          loaded ? "opacity-100" : "opacity-0"
+        } w-full h-auto`}
+      />
+    </div>
+  );
+};
+
 const OurServices = () => {
   const router = useRouter();
-  const [allImagesLoaded, setAllImagesLoaded] = useState(false);
 
   const handleBooking = (service) => {
     router.push(`/services/${service}`);
   };
-
-  useEffect(() => {
-    const isVisible = (el) => {
-      const rect = el.getBoundingClientRect();
-      return (
-        rect.width > 0 &&
-        rect.height > 0 &&
-        rect.bottom >= 0 &&
-        rect.right >= 0 &&
-        rect.top <= window.innerHeight &&
-        rect.left <= window.innerWidth
-      );
-    };
-
-    const loadImages = async () => {
-      const imgElements = Array.from(document.querySelectorAll("img")).filter(isVisible);
-      const bgElements = Array.from(document.querySelectorAll("*")).filter((el) => {
-        const bg = window.getComputedStyle(el).backgroundImage;
-        return bg && bg !== "none" && isVisible(el);
-      });
-
-      const imgPromises = imgElements.map((img) => {
-        return img.complete
-          ? Promise.resolve()
-          : new Promise((resolve) => {
-              img.onload = img.onerror = resolve;
-            });
-      });
-
-      const bgPromises = bgElements.map((el) => {
-        const urlMatch = window
-          .getComputedStyle(el)
-          .backgroundImage.match(/url\(["']?(.*?)["']?\)/);
-        if (!urlMatch) return Promise.resolve();
-
-        const url = urlMatch[1];
-        return new Promise((resolve) => {
-          const img = new Image();
-          img.src = url;
-          img.onload = img.onerror = resolve;
-        });
-      });
-
-      await Promise.all([...imgPromises, ...bgPromises]);
-      setAllImagesLoaded(true);
-    };
-
-    loadImages();
-  }, []);
-
-  if (!allImagesLoaded) {
-    return (
-      <div className="w-screen h-screen flex justify-center items-center bg-[#154E59]">
-        <BlinkBlur color="#fff" size="large" text="ThriveSphere" textColor="#fff" />
-      </div>
-    );
-  }
 
   return (
     <div className="px- xl:container mx-auto lg:text-xl 2xl:text-2xl">
       {/* Header */}
       <div className="flex justify-between py-6 pt-10 w-11/12 xl:w-full mx-auto lg:px-10 border-black border-b-[1px] lg:border-b-[2px]">
         <div>
-          <Image
+          <LoadableImage
             src="/leftic.svg"
             alt="left icon"
             width={100}
@@ -89,7 +57,7 @@ const OurServices = () => {
           </h1>
         </div>
         <div>
-          <Image
+          <LoadableImage
             src="/rightic.svg"
             alt="right icon"
             width={100}
@@ -101,9 +69,9 @@ const OurServices = () => {
 
       {/* Section 1 */}
       <div className="grid md:grid-cols-2 justify-between mt-5 py-4 md:py-10 lg:py-14 px-6">
-        <Image
+        <LoadableImage
           src="/svv1.jpg"
-          alt="smiling woman on white"
+          alt="smiling woman"
           height={500}
           width={500}
           className="mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 border-black border-[1px] p-[1px]"
@@ -141,7 +109,7 @@ const OurServices = () => {
               BOOK NOW
             </button>
           </div>
-          <Image
+          <LoadableImage
             src="/svv2.jpg"
             alt="smiling woman"
             height={500}
@@ -153,7 +121,7 @@ const OurServices = () => {
 
       {/* Section 3 */}
       <div className="grid md:grid-cols-2 justify-between mt-5 py-4 md:py-10 lg:py-14 px-6">
-        <Image
+        <LoadableImage
           src="/svv3.jpg"
           alt="smiling woman"
           height={500}
