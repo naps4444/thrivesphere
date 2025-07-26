@@ -1,11 +1,20 @@
+"use client";
+
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef, forwardRef, useImperativeHandle } from "react";
 import clsx from "clsx";
 
-const ServiceCard = ({ title, description, image, alt, handleBookNow }) => {
+// ServiceCard with forwarded ref
+const ServiceCard = forwardRef(({ title, description, image, alt, handleBookNow }, ref) => {
   const [loaded, setLoaded] = useState(false);
+  const imageRef = useRef(null);
   const blurDataURL = image.replace(".svg", "low.png");
+
+  useImperativeHandle(ref, () => ({
+    getImages: () => [imageRef.current],
+    getBgUrls: () => [], // Add background URLs here if needed in the future
+  }));
 
   return (
     <div className="text-white p-6 rounded-lg shadow-lg w-full sm:w-[300px] mx-auto md:w-[210px] lg:w-[290px] xl:w-[370px] 2xl:w-[450px] flex flex-col relative">
@@ -16,6 +25,7 @@ const ServiceCard = ({ title, description, image, alt, handleBookNow }) => {
 
       {/* Actual Image */}
       <Image
+        ref={imageRef}
         src={`/${image}`}
         alt={alt}
         height={500}
@@ -48,10 +58,12 @@ const ServiceCard = ({ title, description, image, alt, handleBookNow }) => {
       </button>
     </div>
   );
-};
+});
 
-const Services = () => {
+// Services wrapper with forwarded ref to expose all images
+const Services = forwardRef((props, ref) => {
   const router = useRouter();
+  const cardRefs = useRef([]);
 
   const handleBookNow = () => {
     router.push("/services/Services");
@@ -80,6 +92,13 @@ const Services = () => {
       alt: "peaceful woman with a flower",
     },
   ];
+
+  useImperativeHandle(ref, () => ({
+    getImages: () =>
+      cardRefs.current.flatMap((card) => card?.getImages?.() || []),
+    getBgUrls: () =>
+      cardRefs.current.flatMap((card) => card?.getBgUrls?.() || []),
+  }));
 
   return (
     <div className="relative mx-auto xl:container">
@@ -119,6 +138,7 @@ const Services = () => {
           {services.map((service, index) => (
             <ServiceCard
               key={index}
+              ref={(el) => (cardRefs.current[index] = el)}
               title={service.title}
               description={service.description}
               image={service.image}
@@ -130,6 +150,6 @@ const Services = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Services;

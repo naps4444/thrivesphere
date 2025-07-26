@@ -1,14 +1,21 @@
+"use client";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useRef, useImperativeHandle, forwardRef } from "react";
 
-const Hero = () => {
+const Hero = forwardRef((props, ref) => {
   const router = useRouter();
   const [imgLoaded, setImgLoaded] = useState(false);
+  const heroImageRef = useRef(null);
 
   const handleNavigation = () => {
     router.push("/services/Services");
   };
+
+  useImperativeHandle(ref, () => ({
+    getImages: () => [heroImageRef.current],
+    getBgUrls: () => ["/hero-bg.jpg"], // if using background images, list here
+  }));
 
   return (
     <div className="xl:container mx-auto font-cinzel">
@@ -41,13 +48,12 @@ const Hero = () => {
         </div>
 
         <div className="bg-[#CCD0DC] flex items-center justify-center relative min-h-[400px]">
-          {/* Skeleton loader */}
           {!imgLoaded && (
             <div className="absolute w-full h-full bg-gray-300 animate-pulse rounded" />
           )}
 
-          {/* Hero Image */}
           <Image
+            ref={heroImageRef}
             src="/heroimg2.svg"
             alt="ceo thrivesphere"
             height={100}
@@ -62,6 +68,6 @@ const Hero = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Hero;
