@@ -2,12 +2,43 @@
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import "swiper/css";
+import clsx from "clsx";
+
+function ImageWithSkeleton({ src, alt, width, height, className }) {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <div className="relative flex flex-col items-center">
+      {/* Skeleton Placeholder */}
+      {!loaded && (
+        <div
+          style={{ width, height }}
+          className="bg-gray-300 animate-pulse rounded-md mb-2"
+        />
+      )}
+
+      {/* Actual Image */}
+      <Image
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        className={clsx(
+          className,
+          "transition-opacity duration-500",
+          loaded ? "opacity-100" : "opacity-0 absolute"
+        )}
+        onLoadingComplete={() => setLoaded(true)}
+      />
+    </div>
+  );
+}
 
 const Section2 = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
-    getImages: () => [], // no image refs needed; all are inlined
+    getImages: () => [],
     getBgUrls: () => ["/sec3bg.svg"],
   }));
 
@@ -24,7 +55,7 @@ const Section2 = forwardRef((props, ref) => {
         >
           <SwiperSlide>
             <div className="flex flex-col items-center gap-2">
-              <Image src="/iconsec3.svg" alt="icon" height={50} width={50} className="w-10" />
+              <ImageWithSkeleton src="/iconsec3.svg" alt="icon" width={50} height={50} className="w-10" />
               <h1 className="text-center text-lg font-semibold text-[22px] font-cinzel">
                 CERTIFIED EXPERTISE
               </h1>
@@ -36,7 +67,7 @@ const Section2 = forwardRef((props, ref) => {
 
           <SwiperSlide>
             <div className="flex flex-col items-center gap-2">
-              <Image src="/iconsec1.svg" alt="icon" height={50} width={50} className="w-10" />
+              <ImageWithSkeleton src="/iconsec1.svg" alt="icon" width={50} height={50} className="w-10" />
               <h1 className="text-center text-lg font-semibold text-[22px] font-cinzel">
                 REWARDING RESULTS
               </h1>
@@ -48,7 +79,7 @@ const Section2 = forwardRef((props, ref) => {
 
           <SwiperSlide>
             <div className="flex flex-col items-center gap-2">
-              <Image src="/iconsec2.svg" alt="icon" height={50} width={50} className="w-10" />
+              <ImageWithSkeleton src="/iconsec2.svg" alt="icon" width={50} height={50} className="w-10" />
               <h1 className="text-center text-lg font-semibold text-[22px] font-cinzel">
                 PERSONALIZED CARE
               </h1>
@@ -63,7 +94,7 @@ const Section2 = forwardRef((props, ref) => {
       {/* Grid layout for lg screens */}
       <div className="hidden md:grid md:grid-cols-3 xl:gap-14 justify-between bg-[url('/sec3bg.svg')] bg-cover bg-center py-14 px-8 text-white">
         <div className="flex flex-col items-center gap-2 lg:w-[340px] 2xl:w-[450px] xl:gap-3">
-          <Image src="/iconsec3.svg" alt="icon" height={50} width={50} className="w-10 xl:w-14" />
+          <ImageWithSkeleton src="/iconsec3.svg" alt="icon" width={50} height={50} className="w-10 xl:w-14" />
           <h1 className="text-center text-lg font-semibold text-[20px] xl:text-[26px] 2xl:text-[38px] font-cinzel">
             CERTIFIED EXPERTISE
           </h1>
@@ -73,7 +104,7 @@ const Section2 = forwardRef((props, ref) => {
         </div>
 
         <div className="flex flex-col items-center gap-2 mt-[140px] 2xl:w-[420px] lg:mt-[200px] lg:w-[350px] xl:gap-6">
-          <Image src="/iconsec1.svg" alt="icon" height={50} width={50} className="w-10 xl:w-14" />
+          <ImageWithSkeleton src="/iconsec1.svg" alt="icon" width={50} height={50} className="w-10 xl:w-14" />
           <h1 className="text-center text-lg font-semibold text-[20px] xl:text-[26px] 2xl:text-[38px] font-cinzel">
             REWARDING RESULTS
           </h1>
@@ -83,7 +114,7 @@ const Section2 = forwardRef((props, ref) => {
         </div>
 
         <div className="flex flex-col items-center gap-2 lg:w-[340px] 2xl:w-[450px] xl:gap-6">
-          <Image src="/iconsec2.svg" alt="icon" height={50} width={50} className="w-10 xl:w-14" />
+          <ImageWithSkeleton src="/iconsec2.svg" alt="icon" width={50} height={50} className="w-10 xl:w-14" />
           <h1 className="text-center text-lg font-semibold text-[20px] xl:text-[26px] 2xl:text-[30px] font-cinzel">
             PERSONALIZED CARE
           </h1>

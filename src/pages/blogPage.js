@@ -50,7 +50,7 @@ export default function BlogPage() {
       {/* Hero Section */}
       <div className="relative flex justify-center items-center">
         <Image
-          src="/bgblog.svg"
+          src="https://res.cloudinary.com/dpm3yp0xs/image/upload/v1757777882/bgblog_loe60c.svg"
           alt="hero bg"
           width={100}
           height={100}
@@ -62,8 +62,44 @@ export default function BlogPage() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-[150px] bg-gray-100">
-          <BlinkBlur color="#154E59" size="medium" text="ThriveSphere" />
+        <div className="border-t-[1px] border-black mt-4 lg:mt-12 w-11/12 md:w-full mx-auto relative">
+          <div className="w-11/12 mx-auto">
+            <h1 className="font-volkhov font-extrabold mt-8 px-4">Loading Blog Posts...</h1>
+          </div>
+
+          {/* Skeleton grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 md:gap-2 w-11/12 mx-auto">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                className="rounded-lg p-4 border bg-white shadow-sm animate-pulse"
+              >
+                {/* Image skeleton */}
+                <div className="w-full h-[200px] lg:h-[300px] bg-gray-300 rounded mb-4"></div>
+
+                {/* Title skeleton */}
+                <div className="h-6 bg-gray-300 rounded w-3/4 mb-2"></div>
+
+                {/* Description skeleton */}
+                <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
+                <div className="h-4 bg-gray-300 rounded w-5/6 mb-2"></div>
+
+                {/* Tags skeleton */}
+                <div className="flex gap-2 mt-4">
+                  <div className="h-5 bg-gray-300 rounded w-12"></div>
+                  <div className="h-5 bg-gray-300 rounded w-16"></div>
+                </div>
+
+                {/* Date skeleton */}
+                <div className="h-4 bg-gray-300 rounded w-1/2 mt-4"></div>
+              </div>
+            ))}
+          </div>
+
+          {/* Spinner overlay */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <BlinkBlur color="#154E59" size="medium" text="ThriveSphere" />
+          </div>
         </div>
       ) : posts.length === 0 ? (
         <p className="text-center text-gray-500 mt-6">No blog posts available.</p>
