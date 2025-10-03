@@ -11,6 +11,7 @@ import Section2 from "@/components/Section2";
 import Services from "@/components/Services";
 import Testimonal from "@/components/Testimonal";
 import { BlinkBlur } from "react-loading-indicators";
+import ScrollIndicator from "@/components/ScrollIndicator";
 
 export default function Home() {
   const heroRef = useRef(null);
@@ -73,6 +74,7 @@ export default function Home() {
 
   return (
     <>
+    <ScrollIndicator/>
       <div id="home">
         <Hero ref={heroRef} />
       </div>

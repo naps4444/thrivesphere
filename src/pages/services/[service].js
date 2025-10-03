@@ -9,6 +9,7 @@ import axios from "axios";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import BookingForm from "@/components/QuestionnaireCarousel";
+import ScrollIndicator from "@/components/ScrollIndicator";
 
 const ServicePage = () => {
   const router = useRouter();
@@ -94,6 +95,7 @@ const ServicePage = () => {
 
   return (
     <div className="xl:container mx-auto px-6 py-12 text-[#154E59] ">
+      <ScrollIndicator/>
       <button
         onClick={() => router.back()}
         className="mb-4 px-4 py-2 hover:bg-gray-300 text-gray-700 rounded-lg flex items-center gap-2 font-rakkas"

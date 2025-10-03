@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import ScrollIndicator from "@/components/ScrollIndicator";
 
 // LoadableImage component
 const LoadableImage = ({ src, alt, width, height, className }) => {
@@ -40,7 +41,11 @@ const OurServices = () => {
 
   return (
     <div className="px- xl:container mx-auto lg:text-xl 2xl:text-2xl">
-      {/* Header */}
+<ScrollIndicator
+  style={{
+    backgroundColor: "#154E59", // custom color
+  }}
+/>      {/* Header */}
       <div className="flex justify-between py-6 pt-10 w-11/12 xl:w-full mx-auto lg:px-10 border-black border-b-[1px] lg:border-b-[2px]">
         <div>
           <LoadableImage
