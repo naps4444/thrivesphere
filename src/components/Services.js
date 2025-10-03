@@ -2,72 +2,105 @@
 
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { useState, useRef, forwardRef, useImperativeHandle } from "react";
+import { useState, useRef, forwardRef, useImperativeHandle, useEffect } from "react";
 import clsx from "clsx";
+import { motion, useAnimation, useInView } from "framer-motion";
 
-// ServiceCard with forwarded ref
+// ServiceCard with dynamic forward/backward animation
 const ServiceCard = forwardRef(({ title, description, image, alt, handleBookNow }, ref) => {
   const [loaded, setLoaded] = useState(false);
   const imageRef = useRef(null);
-  const blurDataURL = image.replace(".svg", "low.png");
+  const cardRef = useRef(null);
+  const inView = useInView(cardRef, { amount: 0.3 });
+  const controls = useAnimation();
 
   useImperativeHandle(ref, () => ({
     getImages: () => [imageRef.current],
-    getBgUrls: () => [], // Add background URLs here if needed in the future
+    getBgUrls: () => [],
   }));
 
-  return (
-    <div className="text-white p-6 rounded-lg shadow-lg w-full sm:w-[300px] mx-auto md:w-[210px] lg:w-[290px] xl:w-[370px] 2xl:w-[450px] flex flex-col relative">
-      {/* Skeleton Placeholder */}
-      {!loaded && (
-        <div className="w-full h-[250px] bg-gray-300 animate-pulse rounded-md mb-4" />
-      )}
+  useEffect(() => {
+    if (inView) {
+      // Text slides from left, image from right
+      controls.start("visible");
+    } else {
+      // Animate backward when scrolling up
+      controls.start("hidden");
+    }
+  }, [inView, controls]);
 
-      {/* Actual Image */}
-      <Image
-        ref={imageRef}
-        src={`/${image}`}
-        alt={alt}
-        height={500}
-        width={500}
-        placeholder="blur"
-        blurDataURL={`/${blurDataURL}`}
-        className={clsx(
-          "w-full h-auto mx-auto rounded-md transition-opacity duration-500 mb-4",
-          loaded ? "opacity-100 relative" : "opacity-0 absolute"
-        )}
-        onLoadingComplete={() => setLoaded(true)}
-      />
+  const textVariants = {
+    hidden: { opacity: 0, x: -100 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
+  };
+
+  const imageVariants = {
+    hidden: { opacity: 0, x: 100 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
+  };
+
+  const blurDataURL = image.replace(".svg", "low.png");
+
+  return (
+    <motion.div
+      ref={cardRef}
+      className="text-white p-6 rounded-lg shadow-lg w-full sm:w-[300px] mx-auto md:w-[210px] lg:w-[290px] xl:w-[370px] 2xl:w-[450px] flex flex-col relative"
+      initial="hidden"
+      animate={controls}
+    >
+      {/* Image */}
+      <motion.div variants={imageVariants}>
+        {!loaded && <div className="w-full h-[250px] bg-gray-300 animate-pulse rounded-md mb-4" />}
+        <Image
+          ref={imageRef}
+          src={`/${image}`}
+          alt={alt}
+          height={500}
+          width={500}
+          placeholder="blur"
+          blurDataURL={`/${blurDataURL}`}
+          className={clsx(
+            "w-full h-auto mx-auto rounded-md transition-opacity duration-500 mb-4",
+            loaded ? "opacity-100 relative" : "opacity-0 absolute"
+          )}
+          onLoadingComplete={() => setLoaded(true)}
+        />
+      </motion.div>
 
       {/* Title */}
-      <h1 className="text-center md:text-[18px] lg:text-[20px] xl:text-[25px] mt-5 md:font-semibold font-cinzel">
+      <motion.h1
+        variants={textVariants}
+        className="text-center md:text-[18px] lg:text-[20px] xl:text-[25px] mt-5 md:font-semibold font-cinzel"
+      >
         {title}
-      </h1>
+      </motion.h1>
 
       {/* Description */}
-      <p className="text-center font-rakkas tracking-wide flex-1 my-4 lg:text-xl">
+      <motion.p
+        variants={textVariants}
+        className="text-center font-rakkas tracking-wide flex-1 my-4 lg:text-xl"
+      >
         {description}
-      </p>
+      </motion.p>
 
-      {/* CTA Button */}
-      <button
+      {/* Button */}
+      <motion.button
+        variants={textVariants}
         onClick={handleBookNow}
         className="mt-auto px-6 py-2 border-[#CCC193] border-[1px] mx-auto w-full text-[#FFFFFF] bg-[#154E59] font-cinzel transition-all duration-300 ease-in-out hover:bg-[#CCC193] hover:text-black hover:border-black hover:scale-105"
       >
         BOOK NOW
-      </button>
-    </div>
+      </motion.button>
+    </motion.div>
   );
 });
 
-// Services wrapper with forwarded ref to expose all images
+// Services wrapper
 const Services = forwardRef((props, ref) => {
   const router = useRouter();
   const cardRefs = useRef([]);
 
-  const handleBookNow = () => {
-    router.push("/services/Services");
-  };
+  const handleBookNow = () => router.push("/services/Services");
 
   const services = [
     {
@@ -104,32 +137,14 @@ const Services = forwardRef((props, ref) => {
     <div className="relative mx-auto xl:container">
       {/* Section Title */}
       <div className="flex justify-between pb-6 md:pb-10 md:pt-6 px-4 lg:px-10">
-        <Image
-          src="/leftic.svg"
-          alt="left icon"
-          width={100}
-          height={100}
-          className="w-4 md:w-6 lg:w-8 xl:w-10 2xl:w-14"
-        />
+        <Image src="/leftic.svg" alt="left icon" width={100} height={100} className="w-4 md:w-6 lg:w-8 xl:w-10 2xl:w-14" />
         <div className="flex justify-center flex-col items-center">
-          <Image
-            src="/midic.svg"
-            alt="middle icon"
-            width={100}
-            height={100}
-            className="w-4 md:w-6 lg:w-8 xl:w-10 2xl:w-14"
-          />
+          <Image src="/midic.svg" alt="middle icon" width={100} height={100} className="w-4 md:w-6 lg:w-8 xl:w-10 2xl:w-14" />
           <h1 className="text-[14px] md:text-[16px] lg:text-[20px] font-bold xl:text-[26px] 2xl:text-[38px] font-cinzel">
             SERVICES MADE JUST FOR YOU
           </h1>
         </div>
-        <Image
-          src="/rightic.svg"
-          alt="right icon"
-          width={100}
-          height={100}
-          className="w-4 md:w-6 lg:w-8 xl:w-10 2xl:w-14"
-        />
+        <Image src="/rightic.svg" alt="right icon" width={100} height={100} className="w-4 md:w-6 lg:w-8 xl:w-10 2xl:w-14" />
       </div>
 
       {/* Service Cards */}

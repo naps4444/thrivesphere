@@ -1,4 +1,7 @@
-import { useState } from "react"; 
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
 
 const questions = [
   {
@@ -95,12 +98,18 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
 
   if (showCompletionMessage) {
     return (
-      <div className="text-center bg-white p-4 rounded-lg shadow-md font-rakkas">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+        viewport={{ once: false, amount: 0.3 }}
+        className="text-center bg-white p-4 rounded-lg shadow-md font-rakkas"
+      >
         <h2 className="text-xl font-bold text-green-600">🎉 Congratulations!</h2>
         <p className="mt-2 text-gray-700">
           You've successfully answered the questionnaire. You can now fill in your full name, email address, and phone number to submit.
         </p>
-      </div>
+      </motion.div>
     );
   }
 
@@ -108,7 +117,16 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
 
   return (
     <div className="w-full font-rakkas mx-auto p-2 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">{currentQuestion.text}</h2>
+      {/* Animated Question Title */}
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+        viewport={{ once: false, amount: 0.3 }}
+        className="text-xl font-bold mb-4"
+      >
+        {currentQuestion.text}
+      </motion.h2>
 
       <div className="flex flex-col gap-2">
         {currentQuestion.type === "radio" &&
@@ -124,7 +142,9 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
               />
               <span
                 className={`py-2 px-4 border rounded-md w-full text-center ${
-                  answers[currentQuestion.id] === option ? "bg-[#A8781C] text-white" : "bg-gray-100"
+                  answers[currentQuestion.id] === option
+                    ? "bg-[#A8781C] text-white"
+                    : "bg-gray-100"
                 }`}
               >
                 {option}
@@ -143,7 +163,9 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
               />
               <span
                 className={`py-2 px-4 border rounded-md w-full text-center ${
-                  answers[currentQuestion.id]?.includes(option) ? "bg-[#A8781C] text-white" : "bg-gray-100"
+                  answers[currentQuestion.id]?.includes(option)
+                    ? "bg-[#A8781C] text-white"
+                    : "bg-gray-100"
                 }`}
               >
                 {option}
@@ -162,11 +184,18 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
       </div>
 
       <div className="flex justify-between mt-4">
-        <button onClick={handlePrev} disabled={currentIndex === 0} className="px-4 py-2 rounded-md bg-gray-300">
+        <button
+          onClick={handlePrev}
+          disabled={currentIndex === 0}
+          className="px-4 py-2 rounded-md bg-gray-300"
+        >
           Previous
         </button>
 
-        <button onClick={handleNext} className="px-4 py-2 bg-[#A8781C] text-white rounded-md">
+        <button
+          onClick={handleNext}
+          className="px-4 py-2 bg-[#A8781C] text-white rounded-md"
+        >
           {currentIndex === questions.length - 1 ? "Done" : "Next"}
         </button>
       </div>
@@ -187,77 +216,99 @@ const BookingForm = ({ selectedDate, selectedTime }) => {
   return (
     <div className="max-w-lg mx-auto space-y-6 font-rakkas lg:text-xl 2xl:text-2xl">
       {showQuestionnaire === null && (
-        <div className="bg-white p-4 rounded-lg shadow-md text-center">
-          <h2 className="text-lg font-bold">Would you like to answer a few questions before booking?</h2>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          viewport={{ once: false, amount: 0.3 }}
+          className="bg-white p-4 rounded-lg shadow-md text-center"
+        >
+          <h2 className="text-lg font-bold">
+            Would you like to answer a few questions before booking?
+          </h2>
           <div className="flex justify-center gap-4 mt-4">
-            <button onClick={() => setShowQuestionnaire(true)} className="bg-[#A8781C] text-white px-4 py-2 rounded-md">
+            <button
+              onClick={() => setShowQuestionnaire(true)}
+              className="bg-[#A8781C] text-white px-4 py-2 rounded-md"
+            >
               Yes
             </button>
-            <button onClick={() => setShowQuestionnaire(false)} className="bg-gray-500 text-white px-4 py-2 rounded-md">
+            <button
+              onClick={() => setShowQuestionnaire(false)}
+              className="bg-gray-500 text-white px-4 py-2 rounded-md"
+            >
               No
             </button>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {showQuestionnaire && (
-        <QuestionnaireCarousel answers={answers} setAnswers={setAnswers} onComplete={() => setQuestionnaireCompleted(true)} />
+        <QuestionnaireCarousel
+          answers={answers}
+          setAnswers={setAnswers}
+          onComplete={() => setQuestionnaireCompleted(true)}
+        />
       )}
 
       {showQuestionnaire !== null && (
-      <form
-      action="https://formspree.io/f/mldwvznb"
-      method="POST"
-      className="space-y-4 bg-white p-4 rounded-lg shadow-md"
-    >
-      {/* Format questionnaire answers for better readability */}
-      <input
-        type="hidden"
-        name="questionnaire_answers"
-        value={JSON.stringify(answers, null, 2)} 
-      />
-      <input type="hidden" name="selected_date" value={selectedDate} />
-      <input type="hidden" name="selected_time" value={selectedTime} />
-    
-      {/* User details */}
-      <input
-        type="text"
-        name="full_name"
-        placeholder="Full Name"
-        value={fullName}
-        onChange={(e) => setFullName(e.target.value)}
-        className="w-full p-2 border rounded-md"
-        required
-      />
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="w-full p-2 border rounded-md"
-        required
-      />
-      <input
-        type="tel"
-        name="phone"
-        placeholder="Phone"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        className="w-full p-2 border rounded-md"
-        required
-      />
-    
-      <button
-        type="submit"
-        disabled={!isFormValid}
-        className={`bg-[#A8781C] text-white px-4 py-2 rounded w-full ${!isFormValid ? "opacity-50 cursor-not-allowed" : ""}`}
-      >
-        Confirm Booking
-      </button>
-    </form>
-    
-      
+        <motion.form
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          viewport={{ once: false, amount: 0.3 }}
+          action="https://formspree.io/f/mldwvznb"
+          method="POST"
+          className="space-y-4 bg-white p-4 rounded-lg shadow-md"
+        >
+          {/* Format questionnaire answers */}
+          <input
+            type="hidden"
+            name="questionnaire_answers"
+            value={JSON.stringify(answers, null, 2)}
+          />
+          <input type="hidden" name="selected_date" value={selectedDate} />
+          <input type="hidden" name="selected_time" value={selectedTime} />
+
+          {/* User details */}
+          <input
+            type="text"
+            name="full_name"
+            placeholder="Full Name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            className="w-full p-2 border rounded-md"
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-2 border rounded-md"
+            required
+          />
+          <input
+            type="tel"
+            name="phone"
+            placeholder="Phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="w-full p-2 border rounded-md"
+            required
+          />
+
+          <button
+            type="submit"
+            disabled={!isFormValid}
+            className={`bg-[#A8781C] text-white px-4 py-2 rounded w-full ${
+              !isFormValid ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            Confirm Booking
+          </button>
+        </motion.form>
       )}
     </div>
   );

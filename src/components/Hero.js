@@ -1,12 +1,18 @@
 "use client";
+
+import React, { useState, useRef, useImperativeHandle, forwardRef, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState, useRef, useImperativeHandle, forwardRef } from "react";
+import { motion, useInView, useAnimation } from "framer-motion";
 
 const Hero = forwardRef((props, ref) => {
   const router = useRouter();
   const [imgLoaded, setImgLoaded] = useState(false);
   const heroImageRef = useRef(null);
+  const leftColumnRef = useRef(null);
+
+  const controls = useAnimation();
+  const inView = useInView(leftColumnRef, { amount: 0.3 });
 
   const handleNavigation = () => {
     router.push("/services/Services");
@@ -14,13 +20,38 @@ const Hero = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     getImages: () => [heroImageRef.current],
-    getBgUrls: () => ["/hero-bg.jpg"], // if using background images, list here
+    getBgUrls: () => ["/hero-bg.jpg"],
   }));
 
+  // Animate based on viewport
+  useEffect(() => {
+    if (inView) {
+      // Scrolling down: strong entrance
+      controls.start({
+        opacity: 1,
+        y: 0,
+        transition: { duration: 1, ease: "easeOut" },
+      });
+    } else {
+      // Scrolling up: subtle retreat
+      controls.start({
+        opacity: 0.5,
+        y: -20,
+        transition: { duration: 0.8, ease: "easeInOut" },
+      });
+    }
+  }, [inView, controls]);
+
   return (
-    <div className="xl:container mx-auto font-cinzel">
+    <div className="xl:container mx-auto font-cinzel min-h-screen">
       <div className="grid md:grid-cols-2">
-        <div className="bg-[#154E59] flex flex-col gap-4 xl:gap-6 p-4 lg:pl-10 py-6 lg:py-8 relative">
+        {/* Left Column */}
+        <motion.div
+          ref={leftColumnRef}
+          animate={controls}
+          initial={{ opacity: 0, y: 50 }}
+          className="bg-[#154E59] flex flex-col gap-6 p-4 lg:pl-10 py-8 relative"
+        >
           <Image
             src="/staricon.svg"
             alt="star icon"
@@ -28,7 +59,8 @@ const Hero = forwardRef((props, ref) => {
             height={50}
             className="absolute left-7 lg:left-12 xl:top-10"
           />
-          <h1 className="text-[#CCC193] lg:mt-8 mt-7 xl:mt-10 lg:w-11/12 xl:w-full font-semibold">
+
+          <h1 className="text-[#CCC193] lg:mt-8 mt-7 xl:mt-10 lg:w-11/12 xl:w-full font-semibold leading-tight">
             NAVIGATE LIFE WITH PURPOSE AND TRANSFORM YOUR MINDSET TODAY
           </h1>
 
@@ -45,9 +77,16 @@ const Hero = forwardRef((props, ref) => {
           >
             BOOK NOW
           </button>
-        </div>
+        </motion.div>
 
-        <div className="bg-[#CCD0DC] flex items-center justify-center relative min-h-[400px]">
+        {/* Right Column */}
+        <motion.div
+          className="bg-[#CCD0DC] flex items-center justify-center relative min-h-[400px]"
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.3 }}
+        >
           {!imgLoaded && (
             <div className="absolute w-full h-full bg-gray-300 animate-pulse rounded" />
           )}
@@ -64,7 +103,7 @@ const Hero = forwardRef((props, ref) => {
             onLoadingComplete={() => setImgLoaded(true)}
             priority
           />
-        </div>
+        </motion.div>
       </div>
     </div>
   );

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Calendar from "react-calendar";
@@ -5,6 +7,7 @@ import "react-calendar/dist/Calendar.css";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import axios from "axios";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import BookingForm from "@/components/QuestionnaireCarousel";
 
 const ServicePage = () => {
@@ -45,25 +48,24 @@ const ServicePage = () => {
       try {
         const response = await axios.get("/api/admin/availability");
         const fetchedSlots = response.data.availableSlots || [];
-  
-        // Group slots by date while ensuring unique time slots
+
+        // Group slots by date with unique time slots
         const groupedByDate = fetchedSlots.reduce((acc, slot) => {
           const formattedDate = new Date(slot.date).toISOString().split("T")[0];
-  
           if (!acc[formattedDate]) {
-            acc[formattedDate] = new Set(); // Use Set to store unique time slots
+            acc[formattedDate] = new Set();
           }
-  
-          acc[formattedDate].add(slot.timeRange); // Add time slot to the Set
-  
+          acc[formattedDate].add(slot.timeRange);
           return acc;
         }, {});
-  
-        // Convert Sets back to arrays for rendering
+
         const processedSlots = Object.fromEntries(
-          Object.entries(groupedByDate).map(([date, times]) => [date, [...times]])
+          Object.entries(groupedByDate).map(([date, times]) => [
+            date,
+            [...times],
+          ])
         );
-  
+
         setAvailableSlots(processedSlots);
       } catch (error) {
         console.error("Error fetching availability:", error);
@@ -71,7 +73,6 @@ const ServicePage = () => {
     }
     fetchAvailability();
   }, []);
-  
 
   useEffect(() => {
     const formattedDate = selectedDate.toISOString().split("T")[0];
@@ -80,11 +81,15 @@ const ServicePage = () => {
   }, [selectedDate, availableSlots]);
 
   const handlePrevMonth = () => {
-    setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1));
+    setCurrentMonth(
+      (prev) => new Date(prev.getFullYear(), prev.getMonth() - 1)
+    );
   };
 
   const handleNextMonth = () => {
-    setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1));
+    setCurrentMonth(
+      (prev) => new Date(prev.getFullYear(), prev.getMonth() + 1)
+    );
   };
 
   return (
@@ -98,28 +103,58 @@ const ServicePage = () => {
 
       <div className="flex flex-col md:flex-row items-start justify-center mt-6 gap-4">
         <div className="bg-white w-full md:w-6/12 lg:w-6/12 xl:w-7/12 mx-auto md:p-4 rounded-lg shadow-md">
-          <h1 className="text-[30px] lg:text-[42px] font-bold text-center font-cinzel">
+          {/* Animated Title */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            viewport={{ once: false, amount: 0.3 }}
+            className="tracking-in-expand text-[30px] lg:text-[42px] font-bold text-center font-cinzel"
+          >
             {serviceData.title || "Service Not Found"}
-          </h1>
-          <p className="text-center mt-4 font-rakkas lg:text-xl xl:text-2xl 2xl:text-3xl">
-            {serviceData.description}
-          </p>
+          </motion.h1>
 
-          <div className="border-b-[1px] border-black mt-6 mb-2">
+          {/* Animated Description */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            viewport={{ once: false, amount: 0.3 }}
+            className="text-center mt-4 font-rakkas lg:text-xl xl:text-2xl 2xl:text-3xl"
+          >
+            {serviceData.description}
+          </motion.p>
+
+          {/* Animated Select Date Label */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+            viewport={{ once: false, amount: 0.3 }}
+            className="border-b-[1px] border-black mt-6 mb-2"
+          >
             <p className="text-center mb-2 font-semibold tracking-wide">
               SELECT A DATE
             </p>
-          </div>
+          </motion.div>
 
+          {/* Calendar */}
           <div className="xl:w-10/12 mx-auto 2xl:w-8/12">
             <div className="flex justify-between items-center mb-2">
-              <button onClick={handlePrevMonth} className="p-2 text-gray-600 hover:text-black">
+              <button
+                onClick={handlePrevMonth}
+                className="p-2 text-gray-600 hover:text-black"
+              >
                 <IoIosArrowBack size={20} />
               </button>
               <span className="text-lg font-medium">
-                {currentMonth.toLocaleString("default", { month: "long" })} {currentMonth.getFullYear()}
+                {currentMonth.toLocaleString("default", { month: "long" })}{" "}
+                {currentMonth.getFullYear()}
               </span>
-              <button onClick={handleNextMonth} className="p-2 text-gray-600 hover:text-black">
+              <button
+                onClick={handleNextMonth}
+                className="p-2 text-gray-600 hover:text-black"
+              >
                 <IoIosArrowForward size={20} />
               </button>
             </div>
@@ -128,17 +163,28 @@ const ServicePage = () => {
               onChange={setSelectedDate}
               value={selectedDate}
               tileDisabled={({ date }) =>
-                !Object.keys(availableSlots).includes(date.toISOString().split("T")[0])
+                !Object.keys(availableSlots).includes(
+                  date.toISOString().split("T")[0]
+                )
               }
               className="custom-calendar mx-auto small-calendar"
               activeStartDate={currentMonth}
             />
           </div>
 
+          {/* Animated Select Time */}
           {availableTimes.length > 0 && (
-            <div className="mt-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+              viewport={{ once: false, amount: 0.3 }}
+              className="mt-6"
+            >
               <div className="border-b-[1px] border-black mb-2">
-                <p className="text-center mb-2 font-semibold tracking-wide">SELECT A TIME</p>
+                <p className="text-center mb-2 font-semibold tracking-wide">
+                  SELECT A TIME
+                </p>
               </div>
               <div className="flex flex-wrap justify-center gap-2">
                 {availableTimes.map((time, index) => (
@@ -146,25 +192,38 @@ const ServicePage = () => {
                     key={index}
                     onClick={() => setSelectedTime(time)}
                     className={`px-4 py-2 border rounded ${
-                      selectedTime === time ? "bg-[#154E59] text-white" : "bg-white text-black"
+                      selectedTime === time
+                        ? "bg-[#154E59] text-white"
+                        : "bg-white text-black"
                     } hover:bg-[#1E6A75] hover:text-white transition-all`}
                   >
                     {time}
                   </button>
                 ))}
               </div>
-            </div>
+            </motion.div>
           )}
 
+          {/* Selected Time Feedback */}
           {selectedTime && (
-            <p className="text-center mt-4 font-medium">
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 0.6 }}
+              viewport={{ once: false, amount: 0.3 }}
+              className="text-center mt-4 font-medium"
+            >
               You selected: {selectedDate.toDateString()} at {selectedTime}
-            </p>
+            </motion.p>
           )}
         </div>
 
         <div className="xl:w-7/12 md:my-auto">
-          <BookingForm selectedDate={selectedDate} selectedTime={selectedTime} answers={answers} />
+          <BookingForm
+            selectedDate={selectedDate}
+            selectedTime={selectedTime}
+            answers={answers}
+          />
         </div>
       </div>
     </div>
