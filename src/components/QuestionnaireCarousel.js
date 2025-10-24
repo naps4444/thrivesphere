@@ -257,7 +257,7 @@ const BookingForm = ({ selectedDate, selectedTime }) => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
           viewport={{ once: false, amount: 0.3 }}
-          action="https://formspree.io/f/mldwvznb"
+          action="https://formspree.io/f/xnngerla"
           method="POST"
           className="space-y-4 bg-white p-4 rounded-lg shadow-md"
         >
