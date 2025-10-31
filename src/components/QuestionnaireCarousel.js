@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import useBookingStore from "@/store/bookingStore"; // 🧠 Zustand store
 
+// 🧩 Questionnaire setup
 const questions = [
   {
     id: "focus",
@@ -63,6 +67,7 @@ const questions = [
   },
 ];
 
+// 🧠 Questionnaire Carousel Component
 const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCompletionMessage, setShowCompletionMessage] = useState(false);
@@ -100,14 +105,12 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-        viewport={{ once: false, amount: 0.3 }}
+        animate={{ opacity: 1, y: 0 }}
         className="text-center bg-white p-4 rounded-lg shadow-md font-rakkas"
       >
-        <h2 className="text-xl font-bold text-green-600">🎉 Congratulations!</h2>
+        <h2 className="text-xl font-bold text-green-600">🎉 All Done!</h2>
         <p className="mt-2 text-gray-700">
-          You've successfully answered the questionnaire. You can now fill in your full name, email address, and phone number to submit.
+          Great job! Now please fill out your contact info below to complete your booking.
         </p>
       </motion.div>
     );
@@ -117,12 +120,9 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
 
   return (
     <div className="w-full font-rakkas mx-auto p-2 bg-white rounded-lg shadow-md">
-      {/* Animated Question Title */}
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-        viewport={{ once: false, amount: 0.3 }}
+        animate={{ opacity: 1, y: 0 }}
         className="text-xl font-bold mb-4"
       >
         {currentQuestion.text}
@@ -131,7 +131,7 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
       <div className="flex flex-col gap-2">
         {currentQuestion.type === "radio" &&
           currentQuestion.options?.map((option) => (
-            <label key={option} className="flex items-center gap-2 cursor-pointer">
+            <label key={option} className="cursor-pointer">
               <input
                 type="radio"
                 name={`question-${currentQuestion.id}`}
@@ -141,7 +141,7 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
                 className="hidden"
               />
               <span
-                className={`py-2 px-4 border rounded-md w-full text-center ${
+                className={`block py-2 px-4 border rounded-md text-center ${
                   answers[currentQuestion.id] === option
                     ? "bg-[#A8781C] text-white"
                     : "bg-gray-100"
@@ -154,7 +154,7 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
 
         {currentQuestion.type === "checkbox" &&
           currentQuestion.options?.map((option) => (
-            <label key={option} className="flex items-center gap-2 cursor-pointer">
+            <label key={option} className="cursor-pointer">
               <input
                 type="checkbox"
                 checked={answers[currentQuestion.id]?.includes(option) || false}
@@ -162,7 +162,7 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
                 className="hidden"
               />
               <span
-                className={`py-2 px-4 border rounded-md w-full text-center ${
+                className={`block py-2 px-4 border rounded-md text-center ${
                   answers[currentQuestion.id]?.includes(option)
                     ? "bg-[#A8781C] text-white"
                     : "bg-gray-100"
@@ -178,7 +178,7 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
             value={answers[currentQuestion.id] || ""}
             onChange={(e) => handleAnswer(currentQuestion.id, e.target.value)}
             className="w-full p-2 border rounded-md"
-            placeholder="Type your answer here (optional)..."
+            placeholder="Type your answer here..."
           />
         )}
       </div>
@@ -196,36 +196,141 @@ const QuestionnaireCarousel = ({ answers, setAnswers, onComplete }) => {
           onClick={handleNext}
           className="px-4 py-2 bg-[#A8781C] text-white rounded-md"
         >
-          {currentIndex === questions.length - 1 ? "Done" : "Next"}
+          {currentIndex === questions.length - 1 ? "Finish" : "Next"}
         </button>
       </div>
     </div>
   );
 };
 
-const BookingForm = ({ selectedDate, selectedTime }) => {
+// 🧾 Booking Form Component
+const BookingForm = ({ selectedDate, selectedTime, selectedService: initialService }) => {
+  const router = useRouter();
+  const setBookingDetails = useBookingStore((state) => state.setBookingDetails);
+
   const [answers, setAnswers] = useState({});
   const [showQuestionnaire, setShowQuestionnaire] = useState(null);
   const [questionnaireCompleted, setQuestionnaireCompleted] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [selectedService, setSelectedService] = useState(initialService || "lets-connect");
+
+  useEffect(() => {
+    if (router.query.service) {
+      setSelectedService(decodeURIComponent(router.query.service));
+    }
+  }, [router.query.service]);
+
+  const SERVICE_DATA = {
+    "lets-connect": { name: "Let’s Connect - 15 Minutes, Complimentary", price: 0 },
+    "deep-dive": { name: "Deep Dive - 1 Hour | $100", price: 100 },
+    "momentum-package": { name: "Momentum Package - 3 Sessions | $260", price: 260 },
+  };
+
+  const serviceName = SERVICE_DATA[selectedService]?.name || selectedService;
+  const price = SERVICE_DATA[selectedService]?.price ?? 0;
 
   const isFormValid = selectedDate && selectedTime && fullName && email && phone;
 
+  const handleCheckout = async () => {
+    try {
+      // 🧠 Save booking details before redirect
+      setBookingDetails({
+        fullName,
+        email,
+        phone,
+        selectedDate,
+        selectedTime,
+        selectedServiceSlug: selectedService,
+        amount: price,
+        questionnaire: answers,
+      });
+
+      // 🧾 Send to Stripe checkout API
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          selectedServiceSlug: selectedService,
+          fullName,
+          email,
+          selectedDate,
+          selectedTime,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        toast.info("Redirecting to Stripe Checkout...");
+        window.location.href = data.url;
+      } else {
+        toast.error("Failed to create Stripe session.");
+      }
+    } catch (error) {
+      console.error("🔥 Checkout Error:", error);
+      toast.error("Something went wrong.");
+    }
+  };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const bookingData = {
+    fullName,
+    email,
+    phone,
+    selectedService: serviceName,
+    selectedDate,
+    selectedTime,
+    questionnaire: answers,
+  };
+
+  try {
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        access_key: "431d794c-e212-4ced-8bd7-5340096e1403", // ✅ your Web3Forms key
+        subject: "New Booking Submission",
+        from_name: fullName,
+        ...bookingData,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      toast.success("✅ Booking submitted successfully!");
+
+      if (price === 0) {
+        toast.info("Thank you! Your complimentary session has been booked.");
+      } else {
+        await handleCheckout(); // proceed to Stripe
+      }
+    } else {
+      console.error("Web3Forms error:", data);
+      toast.error("⚠️ There was an issue submitting your booking. Please try again.");
+    }
+  } catch (error) {
+    console.error("🔥 Network error while submitting booking:", error);
+    toast.error("Network error — please check your connection and try again.");
+  }
+};
+
+
   return (
-    <div className="max-w-lg mx-auto space-y-6 font-rakkas lg:text-xl 2xl:text-2xl">
+    <div className="max-w-lg mx-auto space-y-6 font-rakkas">
       {showQuestionnaire === null && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          viewport={{ once: false, amount: 0.3 }}
+          animate={{ opacity: 1, y: 0 }}
           className="bg-white p-4 rounded-lg shadow-md text-center"
         >
-          <h2 className="text-lg font-bold">
-            Would you like to answer a few questions before booking?
-          </h2>
+          <h2 className="text-lg font-bold">Would you like to answer a few questions?</h2>
           <div className="flex justify-center gap-4 mt-4">
             <button
               onClick={() => setShowQuestionnaire(true)}
@@ -253,24 +358,13 @@ const BookingForm = ({ selectedDate, selectedTime }) => {
 
       {showQuestionnaire !== null && (
         <motion.form
+          onSubmit={handleSubmit}
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          viewport={{ once: false, amount: 0.3 }}
-          action="https://formspree.io/f/xnngerla"
-          method="POST"
+          animate={{ opacity: 1, y: 0 }}
           className="space-y-4 bg-white p-4 rounded-lg shadow-md"
         >
-          {/* Format questionnaire answers */}
-          <input
-            type="hidden"
-            name="questionnaire_answers"
-            value={JSON.stringify(answers, null, 2)}
-          />
-          <input type="hidden" name="selected_date" value={selectedDate} />
-          <input type="hidden" name="selected_time" value={selectedTime} />
+          <input type="hidden" name="selected_service" value={serviceName} />
 
-          {/* User details */}
           <input
             type="text"
             name="full_name"

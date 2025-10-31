@@ -43,7 +43,7 @@ const Hero = forwardRef((props, ref) => {
   }, [inView, controls]);
 
   return (
-    <div className="xl:container mx-auto font-cinzel min-h-screen">
+    <div className="xl:container mx-auto font-cinzel">
       <div className="grid md:grid-cols-2">
         {/* Left Column */}
         <motion.div

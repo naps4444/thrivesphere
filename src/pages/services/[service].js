@@ -95,7 +95,7 @@ const ServicePage = () => {
 
   return (
     <div className="xl:container mx-auto px-6 py-12 text-[#154E59] ">
-      <ScrollIndicator/>
+      <ScrollIndicator />
       <button
         onClick={() => router.back()}
         className="mb-4 px-4 py-2 hover:bg-gray-300 text-gray-700 rounded-lg flex items-center gap-2 font-rakkas"
@@ -225,6 +225,7 @@ const ServicePage = () => {
             selectedDate={selectedDate}
             selectedTime={selectedTime}
             answers={answers}
+            selectedService={serviceData.title || "Let’s Connect - 15 Minutes, Complimentary"}
           />
         </div>
       </div>

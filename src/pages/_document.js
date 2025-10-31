@@ -18,23 +18,17 @@ export default function Document() {
           rel="stylesheet"
         />
 
-        {/* Google Analytics (load gtag.js only once) */}
+        {/* Google Analytics */}
         <script
           async
-          src="https://www.googletagmanager.com/gtag/js?id=G-CNEL7YV09Y"
+          src="https://www.googletagmanager.com/gtag/js?id=G-T9YVRJHVBG"
         ></script>
-
         <script
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-
-              // Configure both Google Analytics properties
-              gtag('config', 'G-CNEL7YV09Y', {
-                page_path: window.location.pathname,
-              });
               gtag('config', 'G-T9YVRJHVBG', {
                 page_path: window.location.pathname,
               });
