@@ -5,22 +5,28 @@ const db = getFirestore(admin);
 
 export default async function handler(req, res) {
   try {
+    // 🟩 GET — Fetch all availability slots
     if (req.method === "GET") {
       const snapshot = await db.collection("availability").get();
+
       const availableSlots = snapshot.docs.map((doc) => {
         const data = doc.data();
         return {
-          id: doc.id, // Include the document ID for deletion reference
-          ...data,
-          date: typeof data.date === "string" ? data.date : data.date.toDate().toISOString().split("T")[0],
-          createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toDate().toISOString() : "N/A",
+          id: doc.id,
+          startUTC: data.startUTC,
+          endUTC: data.endUTC,
+          timeRange: data.timeRange,
+          createdAt:
+            data.createdAt instanceof Timestamp
+              ? data.createdAt.toDate().toISOString()
+              : null,
         };
       });
 
-      console.log("📤 Sending Formatted Data:", availableSlots);
       return res.status(200).json({ availableSlots });
     }
 
+    // 🟨 POST — Append new slots (skip duplicates)
     if (req.method === "POST") {
       const { availableSlots } = req.body;
 
@@ -28,60 +34,115 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: "No slots provided" });
       }
 
-      const batch = db.batch();
+      // 🧠 Deduplicate before saving
+      const uniqueSlots = [];
+      const seen = new Set();
+
       availableSlots.forEach((slot) => {
+        const [startTime, endTime] = slot.timeRange.split(" - ");
+        const startUTC = new Date(`${slot.date}T${startTime}:00`).toISOString();
+        const endUTC = new Date(`${slot.date}T${endTime}:00`).toISOString();
+        const key = `${startUTC}_${endUTC}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          uniqueSlots.push({ startUTC, endUTC, timeRange: slot.timeRange });
+        }
+      });
+
+      const batch = db.batch();
+      uniqueSlots.forEach((slot) => {
         const docRef = db.collection("availability").doc();
         batch.set(docRef, {
-          date: slot.date, // Store `date` as a string: "YYYY-MM-DD"
+          startUTC: slot.startUTC,
+          endUTC: slot.endUTC,
           timeRange: slot.timeRange,
-          createdAt: Timestamp.fromDate(new Date()),
+          createdAt: Timestamp.now(),
         });
       });
 
       await batch.commit();
-      return res.status(200).json({ message: "Availability saved successfully" });
+      return res
+        .status(200)
+        .json({ message: "Availability appended successfully (duplicates skipped)" });
     }
 
-    if (req.method === "DELETE") {
-      const { date, timeRange } = req.body;
+    // 🟦 PUT — Replace all slots (no duplicates)
+    if (req.method === "PUT") {
+      const { availableSlots } = req.body;
 
-      console.log("🗑️ Delete request received for:", { date, timeRange });
-
-      if (!date || !timeRange) {
-        return res.status(400).json({ message: "Missing required fields" });
+      if (!Array.isArray(availableSlots) || availableSlots.length === 0) {
+        return res.status(400).json({ message: "No slots provided" });
       }
 
-      // 🔍 Debugging: Check stored slots
-      const snapshotAll = await db.collection("availability").get();
-      snapshotAll.docs.forEach(doc => {
-        console.log("📌 Stored in Firestore:", doc.data().date, doc.data().timeRange);
+      // 🧠 Deduplicate before replacing
+      const uniqueSlots = [];
+      const seen = new Set();
+
+      availableSlots.forEach((slot) => {
+        const [startTime, endTime] = slot.timeRange.split(" - ");
+        const startUTC = new Date(`${slot.date}T${startTime}:00`).toISOString();
+        const endUTC = new Date(`${slot.date}T${endTime}:00`).toISOString();
+        const key = `${startUTC}_${endUTC}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          uniqueSlots.push({ startUTC, endUTC, timeRange: slot.timeRange });
+        }
       });
 
-      // ✅ Query Firestore using date as a string
+      // 🧹 Delete all existing slots first
+      const existing = await db.collection("availability").get();
+      const deleteBatch = db.batch();
+      existing.docs.forEach((doc) => deleteBatch.delete(doc.ref));
+      await deleteBatch.commit();
+
+      // 🧱 Add only unique new slots
+      const addBatch = db.batch();
+      uniqueSlots.forEach((slot) => {
+        const docRef = db.collection("availability").doc();
+        addBatch.set(docRef, {
+          startUTC: slot.startUTC,
+          endUTC: slot.endUTC,
+          timeRange: slot.timeRange,
+          createdAt: Timestamp.now(),
+        });
+      });
+
+      await addBatch.commit();
+
+      return res
+        .status(200)
+        .json({ message: "Availability replaced successfully (duplicates removed)" });
+    }
+
+    // 🟥 DELETE — Remove a specific slot
+    if (req.method === "DELETE") {
+      const { startUTC } = req.body;
+
+      if (!startUTC) {
+        return res.status(400).json({ message: "Missing startUTC" });
+      }
+
       const snapshot = await db
         .collection("availability")
-        .where("date", "==", date) // Compare date as a string
-        .where("timeRange", "==", timeRange)
+        .where("startUTC", "==", startUTC)
         .get();
 
       if (snapshot.empty) {
-        console.log("❌ Slot not found in Firestore! Ensure correct date format.");
         return res.status(404).json({ message: "Slot not found" });
       }
 
-      // 🗑️ Delete each matching document
       const batch = db.batch();
       snapshot.docs.forEach((doc) => batch.delete(doc.ref));
-
       await batch.commit();
 
-      console.log("✅ Slot deleted successfully!");
-      return res.status(200).json({ message: "Slot removed successfully" });
+      return res.status(200).json({ message: "Slot deleted successfully" });
     }
 
     return res.status(405).json({ message: "Method Not Allowed" });
   } catch (error) {
-    console.error("❗ Error handling request:", error);
-    return res.status(500).json({ message: "Internal server error", error: error.message });
+    console.error("❗ Error handling availability:", error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
   }
 }

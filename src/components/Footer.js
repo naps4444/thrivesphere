@@ -29,10 +29,10 @@ const Footer = () => {
   <p className="mt-1 tracking-widest md:tracking-normal">
     Email:{" "}
     <a
-      href="mailto:thrivesphereorg@outlook.com"
+      href="mailto:thrivespherecoaching@hotmail.com"
       className=" hover:bg-[#878165] hover:text-white transition-colors duration-200"
     >
-      thrivesphereorg@outlook.com
+      thrivespherecoaching@hotmail.com
     </a>
   </p>
 </div>

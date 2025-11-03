@@ -1,13 +1,23 @@
-import { getAvailability } from "@/models/Availability";
+import { getFirestore, Timestamp } from "firebase-admin/firestore";
+import admin from "@/lib/firebaseAdmin";
+
+const db = getFirestore(admin);
 
 export default async function handler(req, res) {
-  if (req.method !== "GET") return res.status(405).json({ message: "Method not allowed" });
-
   try {
-    const availability = await getAvailability();
-    res.status(200).json({ availableDates: availability?.availableDates || [] });
+    const snapshot = await db.collection("availability").get();
+    const availableSlots = snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        startUTC: data.startUTC,  // stored in UTC
+        endUTC: data.endUTC,      // stored in UTC
+        timeRange: data.timeRange
+      };
+    });
+    res.status(200).json({ availableSlots });
   } catch (error) {
-    console.error("Error fetching availability:", error);
-    res.status(500).json({ message: "Error fetching availability" });
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 }

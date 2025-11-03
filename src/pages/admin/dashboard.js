@@ -1,10 +1,12 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
 export default function AdminPage() {
-  const [availableSlots, setAvailableSlots] = useState({}); // Store slots as an object
+  const [availableSlots, setAvailableSlots] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -12,195 +14,231 @@ export default function AdminPage() {
   const [message, setMessage] = useState("");
   const router = useRouter();
 
+  // 🇨🇦 Default admin timezone (Toronto)
+  const ADMIN_TIMEZONE = "America/Toronto";
+
+  // 🟢 Fetch availability and group by date
   useEffect(() => {
     async function fetchAvailability() {
       try {
         const response = await axios.get("/api/admin/availability");
-        const fetchedSlots = response.data.availableSlots || [];
+        let fetchedSlots = response.data.availableSlots || [];
 
-        // Group slots by date ensuring no duplicates
+        // Deduplicate by startUTC
+        fetchedSlots = Array.from(
+          new Map(fetchedSlots.map((s) => [s.startUTC, s])).values()
+        );
+
+        // Group by local date (for display)
         const groupedByDate = fetchedSlots.reduce((acc, slot) => {
-          const formattedDate = new Date(slot.date).toISOString().split("T")[0];
-
-          if (!acc[formattedDate]) {
-            acc[formattedDate] = [];
-          }
-
-          // Ensure only unique time ranges are stored
-          if (!acc[formattedDate].includes(slot.timeRange)) {
-            acc[formattedDate].push(slot.timeRange);
-          }
-
+          if (!slot.startUTC || !slot.timeRange) return acc;
+          const localDate = new Date(slot.startUTC)
+            .toLocaleDateString("en-CA", { timeZone: ADMIN_TIMEZONE })
+            .split("T")[0];
+          if (!acc[localDate]) acc[localDate] = [];
+          acc[localDate].push(slot);
           return acc;
         }, {});
 
-        setAvailableSlots(groupedByDate); // Only fetch, don't modify slots
+        Object.keys(groupedByDate).forEach((date) => {
+          groupedByDate[date].sort(
+            (a, b) => new Date(a.startUTC) - new Date(b.startUTC)
+          );
+        });
+
+        setAvailableSlots(groupedByDate);
       } catch (error) {
         console.error("Error fetching availability:", error);
+        setMessage("Failed to load availability.");
       }
     }
+
     fetchAvailability();
   }, []);
 
+  // 🟡 Add new slot (converted from Canada time → UTC)
   const addSlot = () => {
     if (!selectedDate || !startTime || !endTime) {
       setMessage("Please select a date and time range.");
       return;
     }
-  
-    const formattedDate = new Date(selectedDate).toISOString().split("T")[0];
+
     const newTimeRange = `${startTime} - ${endTime}`;
-  
+
+    // Convert from admin (Canada) local time → UTC
+    const startInCanada = new Date(
+      new Date(`${selectedDate}T${startTime}:00`).toLocaleString("en-US", {
+        timeZone: ADMIN_TIMEZONE,
+      })
+    );
+    const endInCanada = new Date(
+      new Date(`${selectedDate}T${endTime}:00`).toLocaleString("en-US", {
+        timeZone: ADMIN_TIMEZONE,
+      })
+    );
+
+    const startUTC = new Date(
+      startInCanada.getTime() - startInCanada.getTimezoneOffset() * 60000
+    ).toISOString();
+    const endUTC = new Date(
+      endInCanada.getTime() - endInCanada.getTimezoneOffset() * 60000
+    ).toISOString();
+
     setAvailableSlots((prev) => {
-      // Ensure prev is an object
-      const updatedSlots = { ...prev };
-  
-      // If the date key doesn't exist, initialize with an empty array
-      if (!updatedSlots[formattedDate]) {
-        updatedSlots[formattedDate] = [];
-      }
-  
-      // Check if the time range is already added
-      if (updatedSlots[formattedDate].includes(newTimeRange)) {
-        setMessage("This time slot is already added.");
+      const updated = { ...prev };
+      if (!updated[selectedDate]) updated[selectedDate] = [];
+
+      const exists = updated[selectedDate].some(
+        (s) => s.startUTC === startUTC && s.endUTC === endUTC
+      );
+      if (exists) {
+        setMessage("This time slot already exists.");
         return prev;
       }
-  
-      // Append the new time slot
-      updatedSlots[formattedDate] = [...updatedSlots[formattedDate], newTimeRange];
-  
-      setMessage(""); // Clear error message
-      return updatedSlots;
+
+      updated[selectedDate].push({
+        timeRange: newTimeRange,
+        startUTC,
+        endUTC,
+        timeZone: ADMIN_TIMEZONE,
+      });
+
+      updated[selectedDate].sort(
+        (a, b) => new Date(a.startUTC) - new Date(b.startUTC)
+      );
+
+      setMessage("");
+      return updated;
     });
-  
-    setSelectedDate("");
+
     setStartTime("");
     setEndTime("");
   };
-  
 
-  const removeSlot = async (date, timeRange) => {
+  // 🔴 Remove a slot
+  const removeSlot = async (date, slot) => {
     try {
-      console.log("Attempting to remove slot:", { date, timeRange });
-  
-      // Send delete request to API
       await axios.delete("/api/admin/availability", {
         headers: { "Content-Type": "application/json" },
-        data: { date, timeRange },
+        data: { startUTC: slot.startUTC },
       });
-  
-      // Update state to remove slot from UI
+
       setAvailableSlots((prev) => {
-        const updatedSlots = { ...prev };
-  
-        if (updatedSlots[date]) {
-          // Remove the specific time from the array
-          updatedSlots[date] = updatedSlots[date].filter((time) => time !== timeRange);
-  
-          // If the date has no more slots, remove the date entry
-          if (updatedSlots[date].length === 0) {
-            delete updatedSlots[date];
-          }
-        }
-  
-        return updatedSlots; // Update state
+        const updated = { ...prev };
+        updated[date] = updated[date].filter((s) => s.startUTC !== slot.startUTC);
+        if (updated[date].length === 0) delete updated[date];
+        return updated;
       });
-  
-      console.log("Slot removed successfully!");
+
+      setMessage("Slot removed successfully.");
     } catch (error) {
       console.error("Error removing slot:", error.response?.data || error.message);
+      setMessage("Failed to remove slot.");
     }
   };
-  
-  
-  
 
+  // 🟣 Save all slots
   const saveAvailability = async () => {
     setLoading(true);
     try {
-      // Convert availableSlots object to an array of { date, timeRange }
-      const formattedSlots = Object.entries(availableSlots).flatMap(([date, times]) =>
-        times.map((timeRange) => ({
+      const formattedSlots = Object.entries(availableSlots).flatMap(([date, slots]) =>
+        slots.map((slot) => ({
           date,
-          timeRange,
+          timeRange: slot.timeRange,
+          startUTC: slot.startUTC,
+          endUTC: slot.endUTC,
+          timeZone: ADMIN_TIMEZONE, // Always Canada
         }))
       );
-  
-      console.log("Saving Availability:", formattedSlots);
-  
-      await axios.post("/api/admin/availability", { availableSlots: formattedSlots });
-  
-      setMessage("Availability updated successfully!");
+
+      const response = await axios.get("/api/admin/availability");
+      const existingSlots = response.data.availableSlots || [];
+
+      if (existingSlots.length > 0) {
+        await axios.put("/api/admin/availability", { availableSlots: formattedSlots });
+      } else {
+        await axios.post("/api/admin/availability", { availableSlots: formattedSlots });
+      }
+
+      setMessage("Availability saved successfully!");
     } catch (error) {
-      console.error("Error updating availability:", error.response?.data || error.message);
-      setMessage("Failed to update availability.");
+      console.error("Error saving availability:", error.response?.data || error.message);
+      setMessage("Failed to save availability.");
     }
     setLoading(false);
   };
-  
 
+  // 🧱 Render
   return (
     <div className="container md:w-8/12 xl:w-6/12 mx-auto flex flex-col justify-center px-6 py-12">
-      <h1 className="text-3xl font-bold text-center text-[#154E59]">Admin Dashboard</h1>
+      <h1 className="text-3xl font-bold text-center text-[#154E59]">
+        Admin Dashboard
+      </h1>
 
+      {/* Inputs */}
       <div className="mt-6 flex flex-col md:flex-row gap-4">
-  <div className="flex flex-col">
-    <label htmlFor="date" className="text-sm font-medium text-gray-700">Select Date</label>
-    <input
-      id="date"
-      type="date"
-      className="border px-4 py-2 rounded"
-      value={selectedDate}
-      onChange={(e) => setSelectedDate(e.target.value)}
-    />
-  </div>
+        <div className="flex flex-col">
+          <label htmlFor="date" className="text-sm font-medium text-gray-700">
+            Select Date
+          </label>
+          <input
+            id="date"
+            type="date"
+            className="border px-4 py-2 rounded"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          />
+        </div>
 
-  <div className="flex flex-col">
-    <label htmlFor="start-time" className="text-sm font-medium text-gray-700">Start Time</label>
-    <input
-      id="start-time"
-      type="time"
-      className="border px-4 py-2 rounded"
-      value={startTime}
-      onChange={(e) => setStartTime(e.target.value)}
-    />
-  </div>
+        <div className="flex flex-col">
+          <label htmlFor="start-time" className="text-sm font-medium text-gray-700">
+            Start Time
+          </label>
+          <input
+            id="start-time"
+            type="time"
+            className="border px-4 py-2 rounded"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+          />
+        </div>
 
-  <div className="flex flex-col">
-    <label htmlFor="end-time" className="text-sm font-medium text-gray-700">End Time</label>
-    <input
-      id="end-time"
-      type="time"
-      className="border px-4 py-2 rounded"
-      value={endTime}
-      onChange={(e) => setEndTime(e.target.value)}
-    />
-  </div>
+        <div className="flex flex-col">
+          <label htmlFor="end-time" className="text-sm font-medium text-gray-700">
+            End Time
+          </label>
+          <input
+            id="end-time"
+            type="time"
+            className="border px-4 py-2 rounded"
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+          />
+        </div>
 
-  <button
-  className="bg-[#154E59] text-white px-4 py-2 rounded disabled:opacity-50 self-end transition-all duration-300 ease-in-out hover:bg-[#1b6773]  hover:border-black hover:scale-105 disabled:cursor-not-allowed"
-  onClick={addSlot}
-  disabled={!selectedDate || !startTime || !endTime}
->
-  Add Slot
-</button>
-
-</div>
-
+        <button
+          className="bg-[#154E59] text-white px-4 py-2 rounded self-end transition-all duration-300 hover:bg-[#1b6773]"
+          onClick={addSlot}
+          disabled={!selectedDate || !startTime || !endTime}
+        >
+          Add Slot
+        </button>
+      </div>
 
       {message && <p className="mt-2 text-sm text-red-500">{message}</p>}
 
+      {/* Display Slots */}
       <ul className="mt-4 border p-4 rounded shadow">
         {Object.entries(availableSlots).length > 0 ? (
-          Object.entries(availableSlots).map(([date, times]) => (
+          Object.entries(availableSlots).map(([date, slots]) => (
             <li key={date} className="mt-2">
               <strong>{date}</strong>
               <ul>
-                {times.map((time, index) => (
-                  <li key={index} className="flex justify-between items-center">
-                    {time}
+                {slots.map((slot) => (
+                  <li key={slot.startUTC} className="flex justify-between items-center">
+                    {slot.timeRange} ({slot.timeZone || "America/Toronto"})
                     <button
-                      onClick={() => removeSlot(date, time)}
+                      onClick={() => removeSlot(date, slot)}
                       className="ml-4 text-red-500"
                     >
                       Remove
@@ -215,28 +253,26 @@ export default function AdminPage() {
         )}
       </ul>
 
+      {/* Save */}
       <button
-  className="bg-[#8b5e15] text-white px-6 py-2 mt-4 rounded border-[1px] border-[#CCC193] transition-all duration-300 ease-in-out hover:bg-[#a6751a] hover:text-black hover:border-black hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-  onClick={saveAvailability}
-  disabled={loading || Object.keys(availableSlots).length === 0}
->
-  {loading ? "Saving..." : "Save Availability"}
-</button>
-
-
+        className="bg-[#8b5e15] text-white px-6 py-2 mt-4 rounded border border-[#CCC193] hover:bg-[#a6751a]"
+        onClick={saveAvailability}
+        disabled={loading || Object.keys(availableSlots).length === 0}
+      >
+        {loading ? "Saving..." : "Save Availability"}
+      </button>
 
       <Link href="/subscribers">
-            <button className="px-6 py-2 mt-4 rounded-md border-[#CCC193] border-[1px] mx-auto w-full text-[#FFFFFF] bg-[#154E59] font-cinzel transition-all duration-300 ease-in-out hover:bg-[#CCC193] hover:text-black hover:border-black hover:scale-105">
-                Go to Subscribers
-            </button>
-        </Link>
+        <button className="px-6 py-2 mt-4 rounded-md border border-[#CCC193] w-full text-white bg-[#154E59] font-cinzel hover:bg-[#CCC193] hover:text-black">
+          Go to Subscribers
+        </button>
+      </Link>
 
-
-        <Link href="/admin/createBlogPage">
-            <button className="px-6 py-2 mt-4 rounded-md border-[#CCC193] border-[1px] mx-auto w-full text-[#FFFFFF] bg-[#154E59] font-cinzel transition-all duration-300 ease-in-out hover:bg-[#CCC193] hover:text-black hover:border-black hover:scale-105">
-                Post NewsLetter
-            </button>
-        </Link>
+      <Link href="/admin/createBlogPage">
+        <button className="px-6 py-2 mt-4 rounded-md border border-[#CCC193] w-full text-white bg-[#154E59] font-cinzel hover:bg-[#CCC193] hover:text-black">
+          Post NewsLetter
+        </button>
+      </Link>
     </div>
   );
 }
