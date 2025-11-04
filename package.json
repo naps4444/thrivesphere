@@ -22,6 +22,7 @@
     "formidable": "^3.5.2",
     "framer-motion": "^12.23.22",
     "lucide-react": "^0.475.0",
+    "luxon": "^3.7.2",
     "mongodb": "4.1",
     "mongoose": "^8.10.0",
     "multiparty": "^4.2.3",

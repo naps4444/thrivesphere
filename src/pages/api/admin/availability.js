@@ -1,5 +1,6 @@
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import admin from "../../../lib/firebaseAdmin";
+import { DateTime } from "luxon";
 
 const db = getFirestore(admin);
 
@@ -16,6 +17,7 @@ export default async function handler(req, res) {
           startUTC: data.startUTC,
           endUTC: data.endUTC,
           timeRange: data.timeRange,
+          timeZone: data.timeZone || null,
           createdAt:
             data.createdAt instanceof Timestamp
               ? data.createdAt.toDate().toISOString()
@@ -34,14 +36,25 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: "No slots provided" });
       }
 
-      // 🧠 Deduplicate before saving
+      const ADMIN_TIMEZONE = "America/Toronto";
       const uniqueSlots = [];
       const seen = new Set();
 
       availableSlots.forEach((slot) => {
         const [startTime, endTime] = slot.timeRange.split(" - ");
-        const startUTC = new Date(`${slot.date}T${startTime}:00`).toISOString();
-        const endUTC = new Date(`${slot.date}T${endTime}:00`).toISOString();
+
+        const startUTC = DateTime.fromISO(`${slot.date}T${startTime}`, {
+          zone: ADMIN_TIMEZONE,
+        })
+          .toUTC()
+          .toISO();
+
+        const endUTC = DateTime.fromISO(`${slot.date}T${endTime}`, {
+          zone: ADMIN_TIMEZONE,
+        })
+          .toUTC()
+          .toISO();
+
         const key = `${startUTC}_${endUTC}`;
         if (!seen.has(key)) {
           seen.add(key);
@@ -56,6 +69,7 @@ export default async function handler(req, res) {
           startUTC: slot.startUTC,
           endUTC: slot.endUTC,
           timeRange: slot.timeRange,
+          timeZone: ADMIN_TIMEZONE, // ✅ Added here
           createdAt: Timestamp.now(),
         });
       });
@@ -74,14 +88,25 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: "No slots provided" });
       }
 
-      // 🧠 Deduplicate before replacing
+      const ADMIN_TIMEZONE = "America/Toronto";
       const uniqueSlots = [];
       const seen = new Set();
 
       availableSlots.forEach((slot) => {
         const [startTime, endTime] = slot.timeRange.split(" - ");
-        const startUTC = new Date(`${slot.date}T${startTime}:00`).toISOString();
-        const endUTC = new Date(`${slot.date}T${endTime}:00`).toISOString();
+
+        const startUTC = DateTime.fromISO(`${slot.date}T${startTime}`, {
+          zone: ADMIN_TIMEZONE,
+        })
+          .toUTC()
+          .toISO();
+
+        const endUTC = DateTime.fromISO(`${slot.date}T${endTime}`, {
+          zone: ADMIN_TIMEZONE,
+        })
+          .toUTC()
+          .toISO();
+
         const key = `${startUTC}_${endUTC}`;
         if (!seen.has(key)) {
           seen.add(key);
@@ -103,6 +128,7 @@ export default async function handler(req, res) {
           startUTC: slot.startUTC,
           endUTC: slot.endUTC,
           timeRange: slot.timeRange,
+          timeZone: ADMIN_TIMEZONE, // ✅ Added here too
           createdAt: Timestamp.now(),
         });
       });

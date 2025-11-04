@@ -45,7 +45,7 @@ const ServicePage = () => {
   const [availableTimes, setAvailableTimes] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
 
-  // 🕓 Fetch availability and normalize to Canadian timezone
+  // 🕓 Fetch availability and group by Canadian date
   useEffect(() => {
     async function fetchAvailability() {
       try {
@@ -55,12 +55,14 @@ const ServicePage = () => {
         const grouped = slots.reduce((acc, slot) => {
           if (!slot.startUTC || !slot.endUTC) return acc;
 
-          // Interpret times as Toronto time
+          // Convert UTC → Toronto time for grouping by date
           const startCanada = new Date(
-            new Date(slot.startUTC).toLocaleString("en-US", { timeZone: "America/Toronto" })
+            new Date(slot.startUTC).toLocaleString("en-US", {
+              timeZone: "America/Toronto",
+            })
           );
-          const dateKey = startCanada.toLocaleDateString("en-CA");
 
+          const dateKey = startCanada.toLocaleDateString("en-CA");
           if (!acc[dateKey]) acc[dateKey] = [];
           acc[dateKey].push({ ...slot, startCanada });
           return acc;
@@ -75,46 +77,56 @@ const ServicePage = () => {
     fetchAvailability();
   }, []);
 
-  // 🔄 Update available times when user changes date
+  // 🔄 Update available times when user changes date or timezone
   useEffect(() => {
-    const localKey = selectedDate.toLocaleDateString("en-CA");
-    const slotsForDate = availableSlots[localKey] || [];
+    const updateSlots = () => {
+      const localKey = selectedDate.toLocaleDateString("en-CA");
+      const slotsForDate = availableSlots[localKey] || [];
 
-    const mapped = slotsForDate.map((slot) => {
-      // Convert Toronto times into user's local timezone
-      const startLocal = new Date(
-        new Date(slot.startUTC).toLocaleString("en-US", { timeZone: "America/Toronto" })
-      );
-      const endLocal = new Date(
-        new Date(slot.endUTC).toLocaleString("en-US", { timeZone: "America/Toronto" })
-      );
+      const mapped = slotsForDate.map((slot) => {
+        const startLocal = new Date(slot.startUTC);
+        const endLocal = new Date(slot.endUTC);
 
-      const startUser = new Date(startLocal.toLocaleString());
-      const endUser = new Date(endLocal.toLocaleString());
-
-      return {
-        utcStart: startLocal,
-        utcEnd: endLocal,
-        localLabel: `${startUser.toLocaleTimeString([], {
+        const localLabel = `${startLocal.toLocaleTimeString([], {
           hour: "numeric",
           minute: "2-digit",
           hour12: true,
-        })} - ${endUser.toLocaleTimeString([], {
+        })} - ${endLocal.toLocaleTimeString([], {
           hour: "numeric",
           minute: "2-digit",
           hour12: true,
-        })}`,
-      };
-    });
+        })}`;
 
-    setAvailableTimes(mapped);
-    setSelectedTime(null);
+        return { ...slot, startLocal, endLocal, localLabel };
+      });
+
+      setAvailableTimes(mapped);
+      setSelectedTime(null);
+    };
+
+    updateSlots();
+
+    // 🧩 Watch for timezone changes (VPN/system switch)
+    let prevTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const tzInterval = setInterval(() => {
+      const currentTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (currentTZ !== prevTZ) {
+        prevTZ = currentTZ;
+        updateSlots(); // refresh display when TZ changes
+      }
+    }, 2000);
+
+    return () => clearInterval(tzInterval);
   }, [selectedDate, availableSlots]);
 
   const handlePrevMonth = () =>
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
+    setCurrentMonth(
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1)
+    );
   const handleNextMonth = () =>
-    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
+    setCurrentMonth(
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1)
+    );
 
   return (
     <div className="xl:container mx-auto px-6 py-12 text-[#154E59]">
@@ -148,12 +160,16 @@ const ServicePage = () => {
           {/* Calendar */}
           <div className="mt-6 xl:w-10/12 mx-auto 2xl:w-8/12">
             <div className="flex justify-between items-center mb-2">
-              <button onClick={handlePrevMonth}><IoIosArrowBack size={20} /></button>
+              <button onClick={handlePrevMonth}>
+                <IoIosArrowBack size={20} />
+              </button>
               <span className="text-lg font-medium">
                 {currentMonth.toLocaleString("default", { month: "long" })}{" "}
                 {currentMonth.getFullYear()}
               </span>
-              <button onClick={handleNextMonth}><IoIosArrowForward size={20} /></button>
+              <button onClick={handleNextMonth}>
+                <IoIosArrowForward size={20} />
+              </button>
             </div>
 
             <Calendar
@@ -167,7 +183,7 @@ const ServicePage = () => {
             />
           </div>
 
-          {/* Time slots */}
+          {/* Time Slots */}
           {availableTimes.length > 0 && (
             <div className="mt-6">
               <p className="text-center mb-2 font-semibold tracking-wide">
@@ -179,7 +195,8 @@ const ServicePage = () => {
                     key={i}
                     onClick={() => setSelectedTime(slot)}
                     className={`px-4 py-2 border rounded ${
-                      selectedTime?.utcStart?.getTime() === slot.utcStart.getTime()
+                      selectedTime?.startLocal?.getTime() ===
+                      slot.startLocal.getTime()
                         ? "bg-[#154E59] text-white"
                         : "bg-white text-black"
                     }`}

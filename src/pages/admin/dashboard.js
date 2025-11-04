@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { DateTime } from "luxon";
 
 export default function AdminPage() {
   const [availableSlots, setAvailableSlots] = useState({});
@@ -57,63 +58,60 @@ export default function AdminPage() {
   }, []);
 
   // 🟡 Add new slot (converted from Canada time → UTC)
-  const addSlot = () => {
-    if (!selectedDate || !startTime || !endTime) {
-      setMessage("Please select a date and time range.");
-      return;
+  
+
+const addSlot = () => {
+  if (!selectedDate || !startTime || !endTime) {
+    setMessage("Please select a date and time range.");
+    return;
+  }
+
+  const newTimeRange = `${startTime} - ${endTime}`;
+
+  // ✅ Convert from admin (Toronto) local → UTC properly (no double conversion)
+  const startUTC = DateTime.fromISO(`${selectedDate}T${startTime}`, {
+    zone: ADMIN_TIMEZONE,
+  })
+    .toUTC()
+    .toISO();
+
+  const endUTC = DateTime.fromISO(`${selectedDate}T${endTime}`, {
+    zone: ADMIN_TIMEZONE,
+  })
+    .toUTC()
+    .toISO();
+
+  setAvailableSlots((prev) => {
+    const updated = { ...prev };
+    if (!updated[selectedDate]) updated[selectedDate] = [];
+
+    const exists = updated[selectedDate].some(
+      (s) => s.startUTC === startUTC && s.endUTC === endUTC
+    );
+    if (exists) {
+      setMessage("This time slot already exists.");
+      return prev;
     }
 
-    const newTimeRange = `${startTime} - ${endTime}`;
-
-    // Convert from admin (Canada) local time → UTC
-    const startInCanada = new Date(
-      new Date(`${selectedDate}T${startTime}:00`).toLocaleString("en-US", {
-        timeZone: ADMIN_TIMEZONE,
-      })
-    );
-    const endInCanada = new Date(
-      new Date(`${selectedDate}T${endTime}:00`).toLocaleString("en-US", {
-        timeZone: ADMIN_TIMEZONE,
-      })
-    );
-
-    const startUTC = new Date(
-      startInCanada.getTime() - startInCanada.getTimezoneOffset() * 60000
-    ).toISOString();
-    const endUTC = new Date(
-      endInCanada.getTime() - endInCanada.getTimezoneOffset() * 60000
-    ).toISOString();
-
-    setAvailableSlots((prev) => {
-      const updated = { ...prev };
-      if (!updated[selectedDate]) updated[selectedDate] = [];
-
-      const exists = updated[selectedDate].some(
-        (s) => s.startUTC === startUTC && s.endUTC === endUTC
-      );
-      if (exists) {
-        setMessage("This time slot already exists.");
-        return prev;
-      }
-
-      updated[selectedDate].push({
-        timeRange: newTimeRange,
-        startUTC,
-        endUTC,
-        timeZone: ADMIN_TIMEZONE,
-      });
-
-      updated[selectedDate].sort(
-        (a, b) => new Date(a.startUTC) - new Date(b.startUTC)
-      );
-
-      setMessage("");
-      return updated;
+    updated[selectedDate].push({
+      timeRange: newTimeRange,
+      startUTC,
+      endUTC,
+      timeZone: ADMIN_TIMEZONE,
     });
 
-    setStartTime("");
-    setEndTime("");
-  };
+    updated[selectedDate].sort(
+      (a, b) => new Date(a.startUTC) - new Date(b.startUTC)
+    );
+
+    setMessage("");
+    return updated;
+  });
+
+  setStartTime("");
+  setEndTime("");
+};
+
 
   // 🔴 Remove a slot
   const removeSlot = async (date, slot) => {
