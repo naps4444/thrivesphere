@@ -31,11 +31,28 @@ const LoadableImage = ({ src, alt, width, height, className }) => {
 const OurServices = () => {
   const router = useRouter();
 
-  // Map services to their slugs
+  // Map services to their slugs and images
   const services = [
-    { slug: "lets-connect", title: "LET’S CONNECT - 15 MINUTES, COMPLIMENTARY", description: "A quick, judgement-free conversation to understand your needs and explore how coaching can unlock your potential. No commitment just clarity" },
-    { slug: "deep-dive", title: "DEEP DIVE - 1 HOUR | $100", description: "A focused, in-depth session designed to help you gain clarity, identify roadblocks, and take meaningful steps toward your goals." },
-    { slug: "momentum-package", title: "MOMENTUM PACKAGE - 3 SESSIONS | $260", description: "Transformation doesn’t happen overnight. This package provides consistent support, actionable insights, and a clear path toward your goals." },
+    {
+      slug: "lets-connect",
+      title: "LET’S CONNECT - 15 MINUTES, COMPLIMENTARY",
+      description:
+        "A quick, judgement-free conversation to understand your needs and explore how coaching can unlock your potential. No commitment just clarity",
+      image: "/svv1.jpg",
+    },
+    {
+  slug: "deep-dive",
+  title: "DEEP DIVE - 1 HOUR | $100",
+  description: "A focused, in-depth session designed to help you gain clarity, identify roadblocks, and take meaningful steps toward your goals.",
+  image: "https://res.cloudinary.com/dpm3yp0xs/image/upload/f_auto/v1762459139/New_Product_Poster_6_ndwref.png",
+},
+    {
+      slug: "momentum-package",
+      title: "MOMENTUM PACKAGE - 3 SESSIONS | $260",
+      description:
+        "Transformation doesn’t happen overnight. This package provides consistent support, actionable insights, and a clear path toward your goals.",
+      image: "/svv3.jpg",
+    },
   ];
 
   const handleBooking = (slug) => {
@@ -67,7 +84,9 @@ const OurServices = () => {
       {services.map((service, index) => (
         <div
           key={service.slug}
-          className={`grid md:grid-cols-2 justify-between mt-5 py-4 md:py-10 lg:py-14 px-6 ${index % 2 === 1 ? "bg-[#154E59] text-white" : ""}`}
+          className={`grid md:grid-cols-2 justify-between mt-5 py-4 md:py-10 lg:py-14 px-6 ${
+            index % 2 === 1 ? "bg-[#154E59] text-white" : ""
+          }`}
         >
           {index % 2 === 1 ? (
             <>
@@ -80,24 +99,28 @@ const OurServices = () => {
                 </motion.p>
                 <motion.button
                   onClick={() => handleBooking(service.slug)}
-                  className={`w-3/5 mx-auto md:w-[140px] lg:w-[160px] xl:w-[200px] 2xl:w-[250px] xl:py-4 md:mx-0 py-2 ${index % 2 === 1 ? "bg-[#A8781C] text-white" : "bg-[#A8781C] text-white"} font-cinzel hover:scale-105 hover:bg-[#8b5e15]`}
+                  className={`w-3/5 mx-auto md:w-[140px] lg:w-[160px] xl:w-[200px] 2xl:w-[250px] xl:py-4 md:mx-0 py-2 ${
+                    index % 2 === 1 ? "bg-[#A8781C] text-white" : "bg-[#A8781C] text-white"
+                  } font-cinzel hover:scale-105 hover:bg-[#8b5e15]`}
                 >
                   BOOK NOW
                 </motion.button>
               </div>
               <LoadableImage
-                src={`/svv${index + 1}.jpg`}
-                alt="smiling woman"
+                src={service.image}
+                alt={service.title}
                 height={500}
                 width={500}
-                className={`mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 ${index % 2 === 1 ? "border-white border-[1px] p-[1px]" : "border-black border-[1px] p-[1px]"}`}
+                className={`mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 ${
+                  index % 2 === 1 ? "border-white border-[1px] p-[1px]" : "border-black border-[1px] p-[1px]"
+                }`}
               />
             </>
           ) : (
             <>
               <LoadableImage
-                src={`/svv${index + 1}.jpg`}
-                alt="smiling woman"
+                src={service.image}
+                alt={service.title}
                 height={500}
                 width={500}
                 className="mx-auto w-full md:w-[400px] xl:w-[500px] 2xl:w-4/5 border-black border-[1px] p-[1px]"
