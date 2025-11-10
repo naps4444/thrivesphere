@@ -70,10 +70,10 @@ const Navbar = () => {
         {/* Logo */}
         <button
           onClick={() => handleNavigation("/")}
-          className="text-xl -ml-6 lg:ml-0 font-bold text-gray-800 md:-mt-1"
+          className="text-xl -ml-2 lg:ml-0 font-bold text-gray-800 md:-mt-1"
         >
           <Image
-            src="/logo.svg"
+            src="https://res.cloudinary.com/dpm3yp0xs/image/upload/v1762814882/Thrive_4_w2ecos.svg"
             alt="logo"
             height={180}
             width={180}
