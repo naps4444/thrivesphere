@@ -16,7 +16,7 @@ const ServicePage = () => {
 
   const serviceDetails = {
     "lets-connect": {
-      title: "LET’S CONNECT - 15 MINUTES, COMPLIMENTARY",
+      title: "LET’S CONNECT - 30 MINUTES, COMPLIMENTARY",
       description:
         "A quick, judgment-free conversation to understand your needs and explore how coaching can unlock your potential. No commitment, just clarity.",
       price: 0,
