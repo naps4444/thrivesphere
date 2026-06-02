@@ -96,9 +96,9 @@ const Author = () => {
                 with a deep passion for personal growth and development.
               </p>
               <p>
-                ND is a father of two daughters and a husband, employed with
-                the Nova Scotia government in a human rights position.
-              </p>
+  ND is a father of two daughters and a son, a husband, and is employed with
+  the Nova Scotia government in a human rights position.
+</p>
               <p>
                 Having overcome his own challenges, Nduka empathizes with those
                 feeling lost or uncertain, providing a supportive, nonjudgmental
